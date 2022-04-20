@@ -8,25 +8,29 @@ const dayData = ref(generateDays(0));
 </script>
 
 <template>
-    <div class="table">
-        <div class="left-column">
-            <div>Jours</div>
-            <div>Jours&nbsp;travaillés*</div>
-            <div>Jours&nbsp;Fériés*</div>
-            <div>Congés&nbsp;payés*</div>
-            <div>Nbre&nbsp;h&nbsp;supp</div>
-        </div>
-        <div class="days-container">
-            <single-day v-for="day in dayData" :key="day.date.toString()" :day="day" />
-        </div>
-        <div class="right-column">
-            <div>TOTAL</div>
-            <div>0</div>
-            <div>0</div>
-            <div>0</div>
-            <div>0</div>
-        </div>
+  <div class="table">
+    <div class="left-column">
+      <div>Jours</div>
+      <div>Jours&nbsp;travaillés*</div>
+      <div>Jours&nbsp;Fériés*</div>
+      <div>Congés&nbsp;payés*</div>
+      <div>Nbre&nbsp;h&nbsp;supp</div>
     </div>
+    <div class="days-container">
+      <single-day
+        v-for="day in dayData"
+        :key="day.date.toString()"
+        :day="day"
+      />
+    </div>
+    <div class="right-column">
+      <div>TOTAL</div>
+      <div>0</div>
+      <div>0</div>
+      <div>0</div>
+      <div>0</div>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">

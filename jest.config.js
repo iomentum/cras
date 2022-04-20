@@ -1,6 +1,9 @@
-module.exports = {
-  preset: '@babel/preset-env',
+export default {
+  preset: 'vite-jest',
+  verbose: true,
 
-  testMatch: ['**/*.test.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testMatch: [
+    '**/*.test.?(m)js?(x)',
+  ],
+  testEnvironment: 'jest-environment-jsdom'
 }

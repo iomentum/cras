@@ -1,4 +1,4 @@
-import { Day } from '@/models/day'
+import { Day } from '@/models/day';
 
 export const generateDays = (month: number): Day[] => {
   const date = new Date()
