@@ -1,24 +1,23 @@
 import { Day } from '@/models/day'
 
-export const generateDays = (month:number): [Day] => {
+export const generateDays = (month: number): Day[] => {
   const date = new Date()
   const currentYear = date.getFullYear()
-  const daysInThisMonth = new Date(currentYear, month, 0).getDate()
-  const emptyArray = new Array(daysInThisMonth).fill('')
+  const emptyArray = new Array(32).fill('')
 
   const days = emptyArray
-    .map((day, index) => new Date(currentYear, month, index))
-    .filter((day, index) => day.getMonth() === month)
+    .map((day, index): Day => {
+      return {
+        date: new Date(currentYear, month, index),
+        workedDay: false,
+        holiday: false,
+        vacationDay: false,
+        overTime: 0,
+      }
+    })
+    .filter(({ date }) => date.getMonth() === month)
 
-  return [
-    {
-      date: new Date(),
-      workedDay: false,
-      holiday: true,
-      vacationDay: true,
-      overTime: 5,
-    },
-  ]
+  return days
 }
 
-export default generateDays;
+export default generateDays

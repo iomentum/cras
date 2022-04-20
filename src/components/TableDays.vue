@@ -1,16 +1,80 @@
 <script setup lang="ts">
-import { generateDays } from '@/utils/generateDays';
+import { onMounted, ref } from 'vue'
+import { generateDays } from '@/utils/generateDays'
+import SingleDay from '@/components/SingleDay.vue'
 
-
+const dayData = ref(generateDays(0));
 
 </script>
 
 <template>
-
-
+    <div class="table">
+        <div class="left-column">
+            <div>Jours</div>
+            <div>Jours&nbsp;travaillés*</div>
+            <div>Jours&nbsp;Fériés*</div>
+            <div>Congés&nbsp;payés*</div>
+            <div>Nbre&nbsp;h&nbsp;supp</div>
+        </div>
+        <div class="days-container">
+            <single-day v-for="day in dayData" :key="day.date.toString()" :day="day" />
+        </div>
+        <div class="right-column">
+            <div>TOTAL</div>
+            <div>0</div>
+            <div>0</div>
+            <div>0</div>
+            <div>0</div>
+        </div>
+    </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.table {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 38px;
+    text-align: center;
+    color: #350756;
 
+    & .left-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
 
+        & div {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #350756;
+        }
+
+        & :first-child {
+            font-weight: bold;
+        }
+    }
+
+    & .right-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        color: white;
+
+        & div {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #350756;
+        }
+
+        & :first-child {
+            background-color: #350756;
+            font-weight: bold;
+        }
+    }
+
+    .days-container {
+        display: flex;
+        flex-direction: row;
+    }
+}
 </style>
