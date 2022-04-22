@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { generateDays } from '@/utils/generateDays'
 import SingleDay from '@/components/SingleDay.vue'
+import { useDaysStore } from '@/stores/daysStore'
 
-const dayData = ref(generateDays(0));
+const store = useDaysStore();
+const daysList = store.getDays;
 
 </script>
 
@@ -11,14 +11,14 @@ const dayData = ref(generateDays(0));
   <div class="table">
     <div class="left-column">
       <div>Jours</div>
-      <div>Jours&nbsp;travaillés*</div>
-      <div>Jours&nbsp;Fériés*</div>
-      <div>Congés&nbsp;payés*</div>
-      <div>Nbre&nbsp;h&nbsp;supp</div>
+      <div>Jours travaillés*</div>
+      <div>Jours fériés*</div>
+      <div>Congés payés*</div>
+      <div>Nbre h supp</div>
     </div>
     <div class="days-container">
       <single-day
-        v-for="day in dayData"
+        v-for="day in daysList"
         :key="day.date.toString()"
         :day="day"
       />
@@ -43,27 +43,31 @@ const dayData = ref(generateDays(0));
   text-align: center;
   color: #350756;
   margin: 0 auto;
-  width: 78%;
+  width: 80%;
 
 
   & .left-column {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-
     & div {
-      flex-shrink: 1;
+      flex: 1;
       padding: 5px;
       border: 1px solid #350756;
-      font-weight: bold;
+      width: 85px;
+      text-align: center;
+      &:nth-of-type(1){
+        flex: 0.7;
+      }
+      &:nth-of-type(2) {
+        flex: 2;
+      }
+      &:nth-of-type(5) {
+        flex: 0.9;
+      }
     }
 
     & :first-child {
       font-weight: bold;
-    }
-
-    & div:nth-of-type(2) {
-      flex-grow: 1.4;
     }
 
   }
@@ -74,13 +78,22 @@ const dayData = ref(generateDays(0));
     justify-content: space-around;
 
     & div {
-      flex-grow: 1;
+      flex: 1;
       padding: 5px;
-      border: 1px solid #350756;
+      border: 1px solid $main-color;
+      &:nth-of-type(1){
+        flex: 0.7;
+      }
+      &:nth-of-type(2) {
+        flex: 2;
+      }
+      &:nth-of-type(5) {
+        flex: 0.9;
+      }
     }
 
     & :first-child {
-      background-color: #350756;
+      background-color: $main-color;
       font-weight: bold;
       color: white;
       height: 19.2px;
