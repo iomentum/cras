@@ -5,5 +5,6 @@ export default {
   testMatch: [
     '**/*.test.?(m)js?(x)',
   ],
-  testEnvironment: 'jest-environment-jsdom'
+  testEnvironment: 'jest-environment-jsdom',
+  moduleDirectories: ["node_modules", "src"],
 }

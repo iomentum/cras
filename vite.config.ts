@@ -8,5 +8,12 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/assets/variables.scss";`
+      }
+    }
+  },
 })
