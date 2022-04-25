@@ -14,7 +14,10 @@ export const generateDays = (month: number): Day[] => {
           afternoon: false
         },
         holiday: false,
-        vacationDay: false,
+        vacationDay: {
+          morning: false,
+          afternoon: false
+        },
         overTime: 0,
       }
     })

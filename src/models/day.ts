@@ -7,7 +7,6 @@ export interface Day {
   date: Date
   workedDay: WorkedDay
   holiday: boolean
-  vacationDay: boolean
+  vacationDay: WorkedDay
   overTime: number
 }
-
