@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { Day } from '@/models/day'
 import { computed } from '@vue/reactivity';
 import { useDaysStore } from '@/stores/daysStore'
-import { switchCase } from '@babel/types';
 const store = useDaysStore();
 
 // eslint-disable-next-line no-undef
@@ -14,11 +12,15 @@ const isWeekEnd = computed(():boolean => {
   return dayNumber === 6 || dayNumber === 0
 });
 
-const thisDayInStore = store.arrayOfDays[props.day.date.getDate()-1]
+const thisDay = props.day.date.getDate()-1
 
-function toggle(evt: Event){
-  const target = evt.target as HTMLInputElement
-  store.changeDayProps(props.day.date.getDate()-1, target.name)
+function toggle(event: Event){
+  const target = event.target as HTMLInputElement
+  store.changeDayProps(thisDay, target.name)
+}
+function changeOvertime(event: Event){
+  const target = event.target as HTMLInputElement
+  store.changeOvertime(thisDay, parseInt(target.value))
 }
 
 
@@ -29,38 +31,51 @@ function toggle(evt: Event){
     <div> {{ day.date.getDate() }} </div>
     <div>
       <input
+        v-if="!isWeekEnd"
         type="checkbox"
         name="morning"
-        :checked="thisDayInStore.workedDay.morning"
+        :checked="day.workedDay.morning"
         @change="toggle"
       >
       <input
+        v-if="!isWeekEnd"
         type="checkbox"
         name="afternoon"
-        :checked="thisDayInStore.workedDay.afternoon"
+        :checked="day.workedDay.afternoon"
         @change="toggle"
       >
     </div>
     <div>
       <input
+        v-if="!isWeekEnd"
         type="checkbox"
         name="holiday"
-        :checked="thisDayInStore.holiday"
+        :checked="day.holiday"
         @change="toggle"
       >
     </div>
     <div>
       <input
+        v-if="!isWeekEnd"
         type="checkbox"
-        name="vacationDay"
-        :checked="thisDayInStore.vacationDay"
+        name="vacationDayMorning"
+        :checked="day.vacationDay.morning"
+        @change="toggle"
+      >
+      <input
+        v-if="!isWeekEnd"
+        type="checkbox"
+        name="vacationDayAfternoon"
+        :checked="day.vacationDay.afternoon"
         @change="toggle"
       >
     </div>
     <div class="input-overtime">
       <input
+        v-if="!isWeekEnd"
         type="number"
-        value="0"
+        :value="day.overTime"
+        @change="changeOvertime"
       >
     </div>
   </div>
@@ -76,7 +91,6 @@ function toggle(evt: Event){
   flex-direction: column;
   width: 38px;
   text-align: center;
-
   & > * {
     padding: 5px;
     border: 1px solid $main-color;

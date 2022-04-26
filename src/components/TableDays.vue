@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import SingleDay from '@/components/SingleDay.vue'
 import { useDaysStore } from '@/stores/daysStore'
+import { computed } from '@vue/reactivity';
 
 const store = useDaysStore();
 const daysList = store.getDays;
+
+function toggleAllDays(evt: Event){
+  const target = evt.target as HTMLInputElement
+  store.toggleAllDays(target.checked)
+}
+
+const isAllDaysChecked = computed(():boolean => {
+  return daysList
+    .filter(day => day.date.getDay() != 6 && day.date.getDay() != 0)
+    .every(day => day.workedDay.morning && day.workedDay.afternoon)
+})
 
 </script>
 
@@ -11,7 +23,15 @@ const daysList = store.getDays;
   <div class="table">
     <div class="left-column">
       <div>Jours</div>
-      <div>Jours travaillés*</div>
+      <div>
+        Jours travaillés*
+        <input
+          type="checkbox"
+          name="checkAllDay"
+          :checked="isAllDaysChecked"
+          @change="toggleAllDays"
+        >
+      </div>
       <div>Jours fériés*</div>
       <div>Congés payés*</div>
       <div>Nbre h supp</div>
@@ -26,10 +46,10 @@ const daysList = store.getDays;
 
     <div class="right-column">
       <div>TOTAL</div>
-      <div>0</div>
-      <div>0</div>
-      <div>0</div>
-      <div>0</div>
+      <div>{{ store.getWorkedDays }}</div>
+      <div>{{ store.getHoliday }}</div>
+      <div>{{ store.getVacationDay }}</div>
+      <div>{{ store.getOvertime }}</div>
     </div>
   </div>
 </template>
@@ -37,15 +57,10 @@ const daysList = store.getDays;
 <style scoped lang="scss">
 .table {
   display: flex;
-  flex-direction: row;
-  text-align: center;
-  width: 38px;
   text-align: center;
   color: #350756;
   margin: 0 auto;
   width: 80%;
-
-
   & .left-column {
     display: flex;
     flex-direction: column;
@@ -55,21 +70,10 @@ const daysList = store.getDays;
       border: 1px solid #350756;
       width: 85px;
       text-align: center;
-      &:nth-of-type(1){
-        flex: 0.7;
-      }
-      &:nth-of-type(2) {
-        flex: 2;
-      }
-      &:nth-of-type(5) {
-        flex: 0.9;
-      }
     }
-
     & :first-child {
       font-weight: bold;
     }
-
   }
 
   & .right-column {
@@ -82,13 +86,19 @@ const daysList = store.getDays;
       padding: 5px;
       border: 1px solid $main-color;
       &:nth-of-type(1){
-        flex: 0.7;
+        flex: 0.6;
       }
       &:nth-of-type(2) {
-        flex: 2;
+        flex: 1.5;
+      }
+      &:nth-of-type(3) {
+        flex: 0.75;
+      }
+      &:nth-of-type(4) {
+        flex: 1.5;
       }
       &:nth-of-type(5) {
-        flex: 0.9;
+        flex: 0.7;
       }
     }
 
