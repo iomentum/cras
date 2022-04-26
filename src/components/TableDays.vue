@@ -16,36 +16,6 @@ const isAllDaysChecked = computed(():boolean => {
     .filter(day => day.date.getDay() != 6 && day.date.getDay() != 0)
     .every(day => day.workedDay.morning && day.workedDay.afternoon)
 })
-/* const isAllDaysChecked = computed(():boolean => {
-  return daysList.every(day => {
-    const isWorked = day.workedDay.morning && day.workedDay.afternoon
-    const isWeekEnd = day.date.getDay() == 6 && day.date.getDay() == 0
-    console.log(isWorked, isWeekEnd);
-
-    return isWorked && isWeekEnd
-  })
-}) */
-
-
-
-
-
-/* const isAllDaysChecked = computed(():boolean => {
-  let morningCount = 0
-  let afternoonCount = 0
-  let openDays = 0
-  daysList.forEach(day => {
-    if (day.workedDay.morning) morningCount++
-    if (day.workedDay.afternoon) afternoonCount++
-    if (day.date.getDay() != 0 && day.date.getDay() != 6) openDays++
-  })
-
-  if (morningCount == openDays && afternoonCount == openDays) {
-    return true
-  } else {
-    return false
-  }
-}); */
 
 </script>
 
@@ -100,23 +70,7 @@ const isAllDaysChecked = computed(():boolean => {
       border: 1px solid #350756;
       width: 85px;
       text-align: center;
-      &:nth-of-type(1){
-        flex: 0.6;
-      }
-      &:nth-of-type(2) {
-        flex: 1.5;
-      }
-      &:nth-of-type(3) {
-        flex: 0.75;
-      }
-      &:nth-of-type(4) {
-        flex: 1.5;
-      }
-      &:nth-of-type(5) {
-        flex: 0.7;
-      }
     }
-
     & :first-child {
       font-weight: bold;
     }

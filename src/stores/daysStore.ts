@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Day } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
+import { isWeekend } from '@/utils/utils'
 
 
 export const useDaysStore = defineStore("days", {
@@ -18,15 +19,20 @@ export const useDaysStore = defineStore("days", {
         this.arrayOfDays = generateDays(currentMonth);
       }
     },
+    resetDay(day:Day){
+      day.workedDay.morning = true;
+      day.workedDay.afternoon = true;
+      day.vacationDay.morning = false;
+      day.vacationDay.afternoon = false;
+      day.holiday = false;
+    },
     toggleAllDays(checked:boolean) {
       if(checked) {
         this.arrayOfDays.forEach(day => {
-          if (day.date.getDay() != 6 && day.date.getDay() != 0) {
-            day.workedDay.morning = true;
-            day.workedDay.afternoon = true;
-            day.vacationDay.morning = false;
-            day.vacationDay.afternoon = false;
-            day.holiday = false;
+          if (isWeekend(day)) {
+            this.resetDay(day);
+            console.log(this.arrayOfDays);
+
           }
         })
       } else {
@@ -36,6 +42,10 @@ export const useDaysStore = defineStore("days", {
         })
       }
 
+    },
+    changeOvertime(day:number, overtimeValue:number){
+      const thisDay = this.arrayOfDays[day];
+      thisDay.overTime = overtimeValue;
     },
     changeDayProps(day:number, typeOfProp:string){
       const thisDay = this.arrayOfDays[day];
