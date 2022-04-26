@@ -13,19 +13,16 @@ const isWeekEnd = computed(():boolean => {
 });
 
 const thisDay = props.day.date.getDate()-1
-const thisDayInStore = store.getSingleDay(thisDay+1)
 
 function toggle(event: Event){
   const target = event.target as HTMLInputElement
   store.changeDayProps(thisDay, target.name)
 }
-
 function changeOvertime(event: Event){
   const target = event.target as HTMLInputElement
-  if(thisDayInStore != null){
-    thisDayInStore.overTime = parseInt(target.value)
-  }
+  store.changeOvertime(thisDay, parseInt(target.value))
 }
+
 
 </script>
 
@@ -94,23 +91,6 @@ function changeOvertime(event: Event){
   flex-direction: column;
   width: 38px;
   text-align: center;
-  & div{
-    &:nth-of-type(1){
-        flex: 0.6;
-      }
-      &:nth-of-type(2) {
-        flex: 1.5;
-      }
-      &:nth-of-type(3) {
-        flex: 0.75;
-      }
-      &:nth-of-type(4) {
-        flex: 1.5;
-      }
-      &:nth-of-type(5) {
-        flex: 0.7;
-      }
-  }
   & > * {
     padding: 5px;
     border: 1px solid $main-color;
