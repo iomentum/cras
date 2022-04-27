@@ -1,14 +1,14 @@
 import { Day } from '@/models/day';
 
-export const generateDays = (month: number): Day[] => {
-  const date = new Date()
-  const currentYear = date.getFullYear()
+export const generateDays = (date: Date): Day[] => {
+  const dateYear = date.getFullYear()
+  const month = date.getMonth()
   const emptyArray = new Array(32).fill('')
 
   const days = emptyArray
     .map((day, index): Day => {
       return {
-        date: new Date(currentYear, month, index),
+        date: new Date(dateYear, month, index),
         workedDay: {
           morning: false,
           afternoon: false
