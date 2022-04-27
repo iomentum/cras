@@ -5,18 +5,21 @@ import { isWeekend } from '@/utils/utils'
 
 
 export const useDaysStore = defineStore("days", {
-  state: () :{ arrayOfDays: Day[] | [] } => {
+  state: () :{ arrayOfDays: Day[] | [] ,userName: string, customer: string} => {
     return {
-      arrayOfDays: []
+      arrayOfDays: [],
+      userName:'',
+      customer:''
     };
   },
   actions: {
-    addDays(month?:number) {
-      if (month) {
-        this.arrayOfDays = generateDays(month);
+    addDays(date?:Date) {
+      this.arrayOfDays= []
+      if (date) {
+        this.arrayOfDays = generateDays(date);
       } else {
-        const currentMonth = new Date().getMonth();
-        this.arrayOfDays = generateDays(currentMonth);
+        const currentDate = new Date();
+        this.arrayOfDays = generateDays(currentDate);
       }
     },
     resetDay(day:Day){
@@ -31,8 +34,6 @@ export const useDaysStore = defineStore("days", {
         this.arrayOfDays.forEach(day => {
           if (isWeekend(day)) {
             this.resetDay(day);
-            console.log(this.arrayOfDays);
-
           }
         })
       } else {
@@ -82,18 +83,23 @@ export const useDaysStore = defineStore("days", {
           if(thisDay.vacationDay.afternoon)thisDay.workedDay.afternoon = false;
         }
       }
+    },
+    changeUsername(name:string){
+      this.userName=name
+    },
+    changeCustomer(name:string){
+      this.customer=name
     }
-
   },
 
   getters: {
-    getDays(): Day[] {
-      if(this.arrayOfDays.length > 1) {
-        return this.arrayOfDays;
+    getDays: (state) => {
+      if(state.arrayOfDays.length > 1) {
+        return state.arrayOfDays;
       } else {
         const store = useDaysStore();
         store.addDays();
-        return this.arrayOfDays;
+        return state.arrayOfDays;
       }
     },
     getSingleDay: (state) => {
@@ -129,5 +135,6 @@ export const useDaysStore = defineStore("days", {
       })
       return count
     },
+
   },
 });
