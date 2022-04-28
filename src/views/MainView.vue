@@ -2,6 +2,7 @@
 import TableDays from '@/components/TableDays.vue'
 import UserInputs from '@/components/UserInputs.vue';
 </script>
+
 <template>
   <UserInputs />
   <TableDays />

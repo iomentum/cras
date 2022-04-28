@@ -1,28 +1,48 @@
 <script setup lang="ts">
 import { useDaysStore } from '@/stores/daysStore'
-const store = useDaysStore();
+import { useRoute } from 'vue-router'
+
 // eslint-disable-next-line no-undef
 const date = new Date()
-const path = window.location.pathname
+const route = useRoute()
+const store = useDaysStore();
+const thisMonth = date.getMonth()+1
+
+let thisMonthString = ""+thisMonth
+if (thisMonthString.length == 1) {
+  thisMonthString = "0"+thisMonthString
+}
+
 function changeMonth(event:Event){
   const target = event.target as HTMLInputElement
   store.addDays(new Date(target.value))
 }
 
-const thisMonth = date.getMonth()+1
-let thisMonthString = ""+thisMonth
-if (thisMonthString.length == 1) {
-  thisMonthString = "0"+thisMonthString
+function monthString(){
+  let thisMonthString = ""+thisMonth
+  if (thisMonthString.length == 1) {
+    thisMonthString = "0"+thisMonthString
+  }
+  return thisMonthString
 }
+
 function changeUserame(event: Event){
   const target = event.target as HTMLInputElement
   store.changeUsername(target.value)
 }
+
 function changeCustomer(event: Event){
   const target = event.target as HTMLInputElement
   store.changeCustomer(target.value)
 }
 
+function isMainView(){
+  if(route.name == 'Home'){
+    return true
+  } else {
+    return false
+  }
+}
 </script>
 
 <template>
@@ -30,40 +50,40 @@ function changeCustomer(event: Event){
     <div>
       <p>NOM DE L'INTERVENANT</p>
       <input
-        v-if="path!='/Print'"
+        v-if="isMainView()"
         type="text"
         :value="store.userName"
         @change="changeUserame"
       >
-      <p v-else-if="path=='/Print'">
+      <p v-else>
         {{ store.userName }}
       </p>
     </div>
     <div>
       <p>NOM DU CLIENT</p>
       <input
-        v-if="path!='/Print'"
+        v-if="isMainView()"
         type="text"
         :value="store.customer"
         @change="changeCustomer"
       >
-      <p v-else-if="path=='/Print'">
+      <p v-else>
         {{ store.customer }}
       </p>
     </div>
     <div>
       <p>MOIS/ANNÉE</p>
       <input
-        v-if="path!='/Print'"
+        v-if="isMainView()"
         type="month"
-        :value="date.getFullYear()+'-'+thisMonthString"
+        :value="`${date.getFullYear()}-${monthString()}`"
         @change="changeMonth"
       >
       <input
         v-else
         type="month"
         disabled="true"
-        :value="date.getFullYear()+'-'+thisMonthString"
+        :value="`${date.getFullYear()}-${monthString()}`"
         @change="changeMonth"
       >
     </div>
@@ -71,7 +91,6 @@ function changeCustomer(event: Event){
 </template>
 
 <style scoped lang="scss">
-
 .inputs{
   display: flex;
   flex-direction: row;

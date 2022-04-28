@@ -1,23 +1,28 @@
 <script setup lang="ts">
 import { Day } from '@/models/day'
-import { computed } from '@vue/reactivity';
 import { useDaysStore } from '@/stores/daysStore'
-const store = useDaysStore();
+import { isWeekend } from '@/utils/utils';
+import { useRoute } from 'vue-router'
 
 // eslint-disable-next-line no-undef
 const props = defineProps<{ day: Day }>()
-
-const isWeekEnd = computed(():boolean => {
-  const dayNumber:number = props.day.date.getDay()
-  return dayNumber === 6 || dayNumber === 0
-});
-
+const route = useRoute()
+const store = useDaysStore();
 const thisDay = props.day.date.getDate()-1
+
+function isMainView(){
+  if(route.name == 'Home'){
+    return true
+  } else {
+    return false
+  }
+}
 
 function toggle(event: Event){
   const target = event.target as HTMLInputElement
   store.changeDayProps(thisDay, target.name)
 }
+
 function changeOvertime(event: Event){
   const target = event.target as HTMLInputElement
   store.changeOvertime(thisDay, parseInt(target.value))
@@ -43,84 +48,90 @@ function counter(prop:string){
     }
   }
 }
-const path = window.location.pathname
-
 </script>
 
 <template>
-  <div :class="[{ weekend: isWeekEnd },'day']">
-    <div :class="{ smallbox: path != '/Print' }">
+  <div :class="[{ weekend: isWeekend(day) },{ mainview: isMainView()},'day']">
+    <div>
       {{ day.date.getDate() }}
     </div>
-    <div :class="{ bigbox: path != '/Print' }">
+    <div v-if="!isWeekend(day) && isMainView()">
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="checkbox"
         name="morning"
         :checked="day.workedDay.morning"
         @change="toggle"
       >
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="checkbox"
         name="afternoon"
         :checked="day.workedDay.afternoon"
         @change="toggle"
       >
+    </div>
+    <div v-else>
       <input
-        v-else-if="!isWeekEnd && path=='/Print' && counter('workedDay')!=0"
+        v-if="!isWeekend(day) && counter('workedDay')!=0"
         type="text"
         :value="counter('workedDay')"
         disabled="true"
       >
     </div>
-    <div :class="{ smallbox: path != '/Print' }">
+    <div v-if="!isWeekend(day) && isMainView()">
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="checkbox"
         name="holiday"
         :checked="day.holiday"
         @change="toggle"
       >
+    </div>
+    <div v-else>
       <input
-        v-else-if="!isWeekEnd && path=='/Print' && counter('holiday') != 0"
+        v-if="counter('holiday') != 0"
         type="text"
         name="holiday"
         :value="counter('holiday')"
         disabled="true"
       >
     </div>
-    <div :class="{ bigbox: path != '/Print' }">
+    <div v-if="!isWeekend(day) && isMainView()">
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="checkbox"
         name="vacationDayMorning"
         :checked="day.vacationDay.morning"
         @change="toggle"
       >
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="checkbox"
         name="vacationDayAfternoon"
         :checked="day.vacationDay.afternoon"
         @change="toggle"
       >
+    </div>
+    <div v-else>
       <input
-        v-else-if="!isWeekEnd && path=='/Print' && counter('vacationDay') != 0"
+        v-if="counter('vacationDay') != 0"
         type="text"
         :value="counter('vacationDay')"
         disabled="true"
       >
     </div>
-    <div :class="[{ smallbox: path != '/Print' },'input-overtime']">
+    <div
+      v-if="!isWeekend(day) && isMainView()"
+      class="input-overtime"
+    >
       <input
-        v-if="!isWeekEnd && path!='/Print'"
         type="number"
         :value="day.overTime"
         @change="changeOvertime"
       >
+    </div>
+    <div
+      v-else
+      class="input-overtime"
+    >
       <input
-        v-else-if="!isWeekEnd && path=='/Print' && day.overTime != 0"
+        v-if="day.overTime != 0"
         :value="day.overTime"
         disabled="true"
       >
@@ -131,6 +142,14 @@ const path = window.location.pathname
 <style scoped lang="scss">
 .weekend{
   background-color: #EDEAEA;
+}
+.mainview div{
+  &:nth-child(2n+1){
+    height: 16%;
+  }
+  &:nth-child(2n){
+    height: 26%;
+  }
 }
 .day {
   display: flex;
