@@ -1,4 +1,4 @@
-import { Day } from '@/models/day';
+import { Day, WorkedDay, Holiday } from '@/models/day';
 
 export const generateDays = (date: Date): Day[] => {
   const dateYear = date.getFullYear()
@@ -7,19 +7,10 @@ export const generateDays = (date: Date): Day[] => {
 
   const days = emptyArray
     .map((day, index): Day => {
-      return {
-        date: new Date(dateYear, month, index),
-        workedDay: {
-          morning: false,
-          afternoon: false
-        },
-        holiday: false,
-        vacationDay: {
-          morning: false,
-          afternoon: false
-        },
-        overTime: 0,
+      if (fautTravaillerVieux) {
+        return new WorkedDay(new Date(dateYear, month, index));
       }
+      return new Holiday(new Date(dateYear, month, index));
     })
     .filter(({ date }) => date.getMonth() === month)
 

@@ -8,9 +8,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const store = useDaysStore();
 
-const daysList = computed(():Day[] | [] => {
-  return store.getDays;
-})
+const daysList = computed(():Day[] | [] => store.getDays)
 
 function toggleAllDays(evt: Event){
   const target = evt.target as HTMLInputElement
