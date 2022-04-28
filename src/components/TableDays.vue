@@ -3,8 +3,11 @@ import SingleDay from '@/components/SingleDay.vue'
 import { useDaysStore } from '@/stores/daysStore'
 import { computed } from '@vue/reactivity';
 import { Day } from '@/models/day';
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const store = useDaysStore();
+
 const daysList = computed(():Day[] | [] => {
   return store.getDays;
 })
@@ -13,39 +16,39 @@ function toggleAllDays(evt: Event){
   const target = evt.target as HTMLInputElement
   store.toggleAllDays(target.checked)
 }
+
 const isAllDaysChecked = computed(():boolean => {
   return daysList.value
     .filter(day => day.date.getDay() != 6 && day.date.getDay() != 0)
     .every(day => day.workedDay.morning && day.workedDay.afternoon)
 })
-const path = window.location.pathname;
+
+const isPrintView = computed(():boolean =>{
+  if (route.name == 'PrintView') {
+    return true
+  }else{
+    return false
+  }
+})
 </script>
 
 <template>
-  <div class="table">
+  <div :class="[{ ismainview: !isPrintView}, 'table']">
     <div class="left-column">
-      <div :class="{ smallbox: path != '/Print' }">
-        Jours
-      </div>
-      <div :class="{ bigbox: path != '/Print' }">
+      <div>Jours</div>
+      <div>
         Jours travaillés*
         <input
-          v-if="path!='/Print'"
+          v-if="!isPrintView"
           type="checkbox"
           name="checkAllDay"
           :checked="isAllDaysChecked"
           @change="toggleAllDays"
         >
       </div>
-      <div :class="{ smallbox: path != '/Print' }">
-        Jours fériés*
-      </div>
-      <div :class="{ bigbox: path != '/Print' }">
-        Congés payés*
-      </div>
-      <div :class="{ smallbox: path != '/Print' }">
-        Nbre h supp
-      </div>
+      <div>Jours fériés*</div>
+      <div>Congés payés*</div>
+      <div>Nbre h supp</div>
     </div>
     <div class="days-container">
       <single-day
@@ -55,21 +58,11 @@ const path = window.location.pathname;
       />
     </div>
     <div class="right-column">
-      <div :class="{ smallbox: path != '/Print' }">
-        TOTAL
-      </div>
-      <div :class="{ bigbox: path != '/Print' }">
-        {{ store.getWorkedDays }}
-      </div>
-      <div :class="{ smallbox: path != '/Print' }">
-        {{ store.getHoliday }}
-      </div>
-      <div :class="{ bigbox: path != '/Print' }">
-        {{ store.getVacationDay }}
-      </div>
-      <div :class="{ smallbox: path != '/Print' }">
-        {{ store.getOvertime }}
-      </div>
+      <div>TOTAL</div>
+      <div>{{ store.getWorkedDays }}</div>
+      <div>{{ store.getHoliday }}</div>
+      <div>{{ store.getVacationDay }}</div>
+      <div>{{ store.getOvertime }}</div>
     </div>
   </div>
 </template>
@@ -113,6 +106,16 @@ const path = window.location.pathname;
   .days-container {
     display: flex;
     flex-direction: row;
+  }
+}
+.ismainview .left-column,.ismainview .right-column{
+  & div{
+    &:nth-child(2n+1){
+      height: 16%;
+    }
+    &:nth-child(2n){
+      height: 26%;
+    }
   }
 }
 </style>

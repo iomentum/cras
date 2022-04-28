@@ -3,9 +3,12 @@ import { Day } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
 import { isWeekend } from '@/utils/utils'
 
-
 export const useDaysStore = defineStore("days", {
-  state: () :{ arrayOfDays: Day[] | [] ,userName: string, customer: string} => {
+  state: () :{
+    arrayOfDays: Day[] | [],
+    userName: string,
+    customer: string
+  } => {
     return {
       arrayOfDays: [],
       userName:'',
@@ -23,8 +26,8 @@ export const useDaysStore = defineStore("days", {
       }
     },
     resetDay(day:Day){
-      day.workedDay.morning = true;
-      day.workedDay.afternoon = true;
+      day.workedDay.morning = false;
+      day.workedDay.afternoon = false;
       day.vacationDay.morning = false;
       day.vacationDay.afternoon = false;
       day.holiday = false;
@@ -32,8 +35,10 @@ export const useDaysStore = defineStore("days", {
     toggleAllDays(checked:boolean) {
       if(checked) {
         this.arrayOfDays.forEach(day => {
-          if (isWeekend(day)) {
-            this.resetDay(day);
+          if (!isWeekend(day)) {
+            this.resetDay(day)
+            day.workedDay.morning = true;
+            day.workedDay.afternoon = true;
           }
         })
       } else {
@@ -42,7 +47,6 @@ export const useDaysStore = defineStore("days", {
           day.workedDay.afternoon=false;
         })
       }
-
     },
     changeOvertime(day:number, overtimeValue:number){
       const thisDay = this.arrayOfDays[day];
@@ -135,6 +139,5 @@ export const useDaysStore = defineStore("days", {
       })
       return count
     },
-
   },
 });

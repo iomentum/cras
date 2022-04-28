@@ -2,6 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import TheHeader from '@/components/TheHeader.vue';
+
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import TheHeader from '@/components/TheHeader.vue';
 <style lang="scss">
 #app {
   font-family: 'bau-regular', sans-serif;
-  font-size: 17px;
+  font-size: 19px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #426485;
@@ -24,11 +25,8 @@ import TheHeader from '@/components/TheHeader.vue';
 body{
   margin:0;
 }
-.bigbox {
-  height: 26% !important
-}
-.smallbox {
-  height: 16% !important
+input{
+  font-family: "bau-regular";
 }
 
 @font-face {
