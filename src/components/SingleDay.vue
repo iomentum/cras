@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Day } from '@/models/day'
 import { useDaysStore } from '@/stores/daysStore'
 import { isWeekend } from '@/utils/utils';
@@ -10,52 +11,73 @@ const route = useRoute()
 const store = useDaysStore();
 const thisDay = props.day.date.getDate()-1
 
-function isMainView(){
-  if(route.name == 'Home'){
-    return true
-  } else {
-    return false
-  }
-}
+const isMainView = route.name == 'Home';
 
-function toggle(event: Event){
+function toggle(event: Event) {
   const target = event.target as HTMLInputElement
   store.changeDayProps(thisDay, target.name)
 }
 
-function changeOvertime(event: Event){
+function changeOvertime(event: Event) {
   const target = event.target as HTMLInputElement
   store.changeOvertime(thisDay, parseInt(target.value))
 }
 
-function counter(prop:string){
-  let count = 0
-  switch(prop){
+const workedDayNumber = computed((): number => {
+  const workedDay =  props.day.workedDay;
+
+  const fullyWorkedDay = workedDay.morning && workedDay.afternoon;
+  if( fullyWorkedDay ) return 1;
+
+  const halfWorkedDay = workedDay.morning || workedDay.afternoon;
+  if( halfWorkedDay ) return 0.5;
+
+  return 0;
+})
+
+const vacationDayNumber = computed((): number => {
+  const vacationDay =  props.day.workedDay;
+
+  const fullVacationDay = vacationDay.morning && vacationDay.afternoon;
+  if( fullVacationDay ) return 1;
+
+  const halfVacationDay = vacationDay.morning || vacationDay.afternoon;
+  if( halfVacationDay ) return 0.5;
+
+  return 0;
+})
+
+const holyDay = props.day.holiday ? 1 : 0;
+
+function halfDayCounter(typeOfDay:string){
+  let dayCount = 0
+  switch(typeOfDay){
     case "workedDay":{
-      if (props.day.workedDay.morning) count+=0.5
-      if (props.day.workedDay.afternoon) count+=0.5
-      return count
+      if (props.day.workedDay.morning) dayCount += 0.5
+      if (props.day.workedDay.afternoon) dayCount += 0.5
+      break
     }
     case "vacationDay":{
-      if (props.day.vacationDay.morning) count+=0.5
-      if (props.day.vacationDay.afternoon) count+=0.5
-      return count
+      if (props.day.vacationDay.morning) dayCount += 0.5
+      if (props.day.vacationDay.afternoon) dayCount += 0.5
+      break
     }
     case "holiday":{
-      if (props.day.holiday) count = 1
-      else count = 0
-      return count
+      if (props.day.holiday) dayCount = 1
+      else dayCount = 0
+      break
     }
+  return dayCount
   }
 }
 </script>
 
 <template>
-  <div :class="[{ weekend: isWeekend(day) },{ mainview: isMainView()},'day']">
+  <div :class="[{ weekend: isWeekend(day) } , { mainview: isMainView },'day']">
     <div>
       {{ day.date.getDate() }}
     </div>
-    <div v-if="!isWeekend(day) && isMainView()">
+    <div v-if="!isWeekend(day) && isMainView">
       <input
         type="checkbox"
         name="morning"
@@ -71,13 +93,13 @@ function counter(prop:string){
     </div>
     <div v-else>
       <input
-        v-if="!isWeekend(day) && counter('workedDay')!=0"
+        v-if="!isWeekend(day) && halfDayCounter('workedDay')!=0"
         type="text"
-        :value="counter('workedDay')"
+        :value="halfDayCounter('workedDay')"
         disabled="true"
       >
     </div>
-    <div v-if="!isWeekend(day) && isMainView()">
+    <div v-if="!isWeekend(day) && isMainView">
       <input
         type="checkbox"
         name="holiday"
@@ -87,14 +109,14 @@ function counter(prop:string){
     </div>
     <div v-else>
       <input
-        v-if="counter('holiday') != 0"
+        v-if="halfDayCounter('holiday') != 0"
         type="text"
         name="holiday"
-        :value="counter('holiday')"
+        :value="halfDayCounter('holiday')"
         disabled="true"
       >
     </div>
-    <div v-if="!isWeekend(day) && isMainView()">
+    <div v-if="!isWeekend(day) && isMainView">
       <input
         type="checkbox"
         name="vacationDayMorning"
@@ -110,14 +132,14 @@ function counter(prop:string){
     </div>
     <div v-else>
       <input
-        v-if="counter('vacationDay') != 0"
+        v-if="halfDayCounter('vacationDay') != 0"
         type="text"
-        :value="counter('vacationDay')"
+        :value="halfDayCounter('vacationDay')"
         disabled="true"
       >
     </div>
     <div
-      v-if="!isWeekend(day) && isMainView()"
+      v-if="!isWeekend(day) && isMainView"
       class="input-overtime"
     >
       <input
