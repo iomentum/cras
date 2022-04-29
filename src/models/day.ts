@@ -6,8 +6,6 @@
      worked holy
 
 */
-
-
 export class Day {
   date: Date;
 
@@ -16,6 +14,8 @@ export class Day {
   }
 
   totalWorked():number {return 0;}
+  getDayDate():Date {return this.date}
+
 }
 
 export class WorkedDay extends Day {
@@ -32,8 +32,16 @@ export class WorkedDay extends Day {
     this.morning = true;
   }
 
+  removeMorning(): void {
+    this.morning = false;
+  }
+
   addAfternoon(): void {
     this.afternoon = true;
+  }
+
+  removeAfternoon(): void {
+    this.afternoon = false;
   }
 
   addWholeDay(): void {
@@ -42,8 +50,8 @@ export class WorkedDay extends Day {
   }
 
   reset(): void {
-    this.morning = false;
-    this.afternoon = false;
+    this.removeMorning();
+    this.removeAfternoon();
   }
 
   totalWorked(): number {

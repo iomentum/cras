@@ -6,11 +6,12 @@ export const generateDays = (date: Date): Day[] => {
   const emptyArray = new Array(32).fill('')
 
   const days = emptyArray
-    .map((day, index): Day => {
-      if (fautTravaillerVieux) {
-        return new WorkedDay(new Date(dateYear, month, index));
+    .map((_, index): Day => {
+      const date = new Date(dateYear, month, index).getDay()
+      if (date == 6 || date == 0) {
+        return new Holiday(new Date(dateYear, month, index));
       }
-      return new Holiday(new Date(dateYear, month, index));
+      return new WorkedDay(new Date(dateYear, month, index));
     })
     .filter(({ date }) => date.getMonth() === month)
 

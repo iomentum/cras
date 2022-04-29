@@ -4,8 +4,8 @@ import { useRoute } from 'vue-router'
 
 // eslint-disable-next-line no-undef
 const date = new Date()
-const route = useRoute()
 const store = useDaysStore();
+const route = useRoute()
 const thisMonth = date.getMonth()+1
 
 let thisMonthString = ""+thisMonth
@@ -52,11 +52,11 @@ function isMainView(){
       <input
         v-if="isMainView()"
         type="text"
-        :value="store.userName"
+        :value="store.username"
         @change="changeUserame"
       >
       <p v-else>
-        {{ store.userName }}
+        {{ store.username }}
       </p>
     </div>
     <div>

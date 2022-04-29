@@ -10,3 +10,4 @@ import UserInputs from '@/components/UserInputs.vue';
     Valider
   </router-link>
 </template>
+
