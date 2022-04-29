@@ -1,13 +1,12 @@
 <script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { Day, WorkedDay } from '@/models/day';
 import SingleDay from '@/components/SingleDay.vue'
 import { useDaysStore } from '@/stores/daysStore'
-import { computed } from '@vue/reactivity';
-import { Day } from '@/models/day';
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const store = useDaysStore();
-
 const daysList = computed(():Day[] | [] => store.getDays)
 
 function toggleAllDays(evt: Event){
@@ -16,103 +15,87 @@ function toggleAllDays(evt: Event){
 }
 
 const isAllDaysChecked = computed(():boolean => {
-  return daysList.value
-    .filter(day => day.date.getDay() != 6 && day.date.getDay() != 0)
-    .every(day => day.workedDay.morning && day.workedDay.afternoon)
+  return store.getArrayOfDays
+    .filter(day => day instanceof WorkedDay)
+    .every(day => day.morning && day.afternoon);
 })
 
-const isPrintView = computed(():boolean =>{
-  if (route.name == 'PrintView') {
+function isMainView(){
+  if(route.path == "/"){
     return true
-  }else{
+  } else {
     return false
   }
-})
+}
+//console.log(store.arrayOfDays)
 </script>
 
 <template>
-  <div :class="[{ ismainview: !isPrintView}, 'table']">
+  <div class="table-of-days">
     <div class="left-column">
       <div>Jours</div>
       <div>
-        Jours travaillés*
+        Jours travaillés
         <input
-          v-if="!isPrintView"
+          v-if="isMainView()"
           type="checkbox"
-          name="checkAllDay"
           :checked="isAllDaysChecked"
           @change="toggleAllDays"
         >
       </div>
-      <div>Jours fériés*</div>
-      <div>Congés payés*</div>
-      <div>Nbre h supp</div>
     </div>
+
     <div class="days-container">
-      <single-day
+      <SingleDay
         v-for="day in daysList"
-        :key="day.date.toString()"
+        :key="day.date.getDay"
         :day="day"
       />
     </div>
     <div class="right-column">
-      <div>TOTAL</div>
-      <div>{{ store.getWorkedDays }}</div>
-      <div>{{ store.getHoliday }}</div>
-      <div>{{ store.getVacationDay }}</div>
-      <div>{{ store.getOvertime }}</div>
+      <div>Total</div>
+      <div><p>{{ store.getTotalWorked }}</p></div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-.table {
+<style lang="scss">
+.table-of-days {
   display: flex;
   text-align: center;
-  color: #350756;
+  height: 100px;
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
   & .left-column {
-    display: flex;
-    flex-direction: column;
-    & div {
-      padding: 5px;
-      border: 1px solid $main-color;
-      width: 150px;
-      box-sizing: border-box;
-      height: 20%;
-    }
-    & :first-child {
-      font-weight: bold;
+    border: 1px solid $main-color;
+    border-right: none;
+    & div:first-child {
+      border-bottom: 1px solid $main-color;
+      height: 38%
     }
   }
   & .right-column {
-    display: flex;
-    flex-direction: column;
-  & div {
-      padding: 5px;
-      border: 1px solid $main-color;
-      box-sizing: border-box;
-      height: 20%;
+    border: 1px solid $main-color;
+    width: 70px;
+    & div:nth-of-type(1) {
+      border-bottom: 1px solid $main-color;
+      height: 38%
     }
-    & :first-child {
-      background-color: $main-color;
-      font-weight: bold;
-      color: white;
+    & div:nth-of-type(2) {
+      height: 61%
     }
+
   }
-  .days-container {
+  & .days-container{
     display: flex;
     flex-direction: row;
-  }
-}
-.ismainview .left-column,.ismainview .right-column{
-  & div{
-    &:nth-child(2n+1){
-      height: 16%;
+    & div {
+      text-align: center;
     }
-    &:nth-child(2n){
-      height: 26%;
+  }
+  & .left-column{
+    & div {
+      width: 150px;
     }
   }
 }
