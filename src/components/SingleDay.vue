@@ -74,11 +74,15 @@ function isMainView(){
 .day{
   display: flex;
   flex-direction: column;
-  width: 50px;
+  width: 45px;
   border: 1px solid $main-color;
   border-right: none;
+  color: $main-color;
+  & p {
+    font-family: 'bau-regular'
+  }
   & .total-worked-day {
-    height: 61%
+    height: 59%
   }
   & .checkboxes {
     display: flex;
@@ -88,12 +92,12 @@ function isMainView(){
     justify-content: space-around
   }
   & div:nth-child(1){
-    height: 38%;
+    height: 40%;
     border-bottom:  1px solid $main-color;
   }
   & .holiday {
   background-color: #EDEAEA;
-  height: 61%
+  height: 59%
   }
 }
 </style>

@@ -6,23 +6,29 @@ export const useDaysStore = defineStore("days", {
   state: () :{
     arrayOfDays: Day[] | [],
     username: string,
-    customer: string
+    customer: string,
+    loading: boolean
   } => {
     return {
       arrayOfDays: [],
       username: "",
-      customer: ""
+      customer: "",
+      loading: false,
     };
   },
   actions: {
-    addDays(date?:Date) {
+    async addDays (date?:Date) {
       this.arrayOfDays= []
+      this.loading = true;
+
       if (date) {
-        this.arrayOfDays = generateDays(date);
+        this.arrayOfDays = await generateDays(date);
       } else {
         const currentDate = new Date();
-        this.arrayOfDays = generateDays(currentDate);
+        this.arrayOfDays = await generateDays(currentDate);
       }
+
+      this.loading = false;
     },
     toggleAllDays(isChecked: boolean) {
       if(isChecked){
@@ -57,13 +63,13 @@ export const useDaysStore = defineStore("days", {
 
   getters: {
     getDays: (state) => {
-      if(state.arrayOfDays.length > 1) {
-        return state.arrayOfDays;
-      } else {
-        const store = useDaysStore();
-        store.addDays();
-        return state.arrayOfDays;
-      }
+      if(state.arrayOfDays.length > 1)  return state.arrayOfDays;
+
+      if(state.loading) return []
+
+      const store = useDaysStore();
+      store.addDays();
+      return state.arrayOfDays;
     },
     getArrayOfDays: (state) => {
       return state.arrayOfDays
