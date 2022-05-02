@@ -1,133 +1,84 @@
 import { defineStore } from 'pinia'
-import { Day } from '@/models/day';
+import { Day, WorkedDay } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
-import { isWeekend } from '@/utils/utils'
-
 
 export const useDaysStore = defineStore("days", {
-  state: () :{ arrayOfDays: Day[] | [] } => {
+  state: () :{
+    arrayOfDays: Day[] | [],
+    username: string,
+    customer: string
+  } => {
     return {
-      arrayOfDays: []
+      arrayOfDays: [],
+      username: "",
+      customer: ""
     };
   },
   actions: {
-    addDays(month?:number) {
-      if (month) {
-        this.arrayOfDays = generateDays(month);
+    addDays(date?:Date) {
+      this.arrayOfDays= []
+      if (date) {
+        this.arrayOfDays = generateDays(date);
       } else {
-        const currentMonth = new Date().getMonth();
-        this.arrayOfDays = generateDays(currentMonth);
+        const currentDate = new Date();
+        this.arrayOfDays = generateDays(currentDate);
       }
     },
-    resetDay(day:Day){
-      day.workedDay.morning = true;
-      day.workedDay.afternoon = true;
-      day.vacationDay.morning = false;
-      day.vacationDay.afternoon = false;
-      day.holiday = false;
-    },
-    toggleAllDays(checked:boolean) {
-      if(checked) {
+    toggleAllDays(isChecked: boolean) {
+      if(isChecked){
         this.arrayOfDays.forEach(day => {
-          if (isWeekend(day)) {
-            this.resetDay(day);
-            console.log(this.arrayOfDays);
-
-          }
+          if(day instanceof WorkedDay) { day.addWholeDay() }
         })
       } else {
         this.arrayOfDays.forEach(day => {
-          day.workedDay.morning=false;
-          day.workedDay.afternoon=false;
+          if(day instanceof WorkedDay) { day.reset() }
         })
       }
-
     },
-    changeOvertime(day:number, overtimeValue:number){
-      const thisDay = this.arrayOfDays[day];
-      thisDay.overTime = overtimeValue;
-    },
-    changeDayProps(day:number, typeOfProp:string){
-      const thisDay = this.arrayOfDays[day];
-      switch(typeOfProp){
-        case 'morning':
-          thisDay.workedDay.morning=!thisDay.workedDay.morning
-          if (thisDay.workedDay.morning) thisDay.vacationDay.morning = false;
-          thisDay.holiday = false
-        break
-        case 'afternoon':
-          thisDay.workedDay.afternoon=!thisDay.workedDay.afternoon
-          if (thisDay.workedDay.afternoon) thisDay.vacationDay.afternoon = false;
-          thisDay.holiday = false
-        break
-        case 'holiday':
-          thisDay.holiday = !thisDay.holiday
-          if (thisDay.holiday) {
-            thisDay.workedDay.morning = false;
-            thisDay.workedDay.afternoon = false;
-            thisDay.vacationDay.morning = false;
-            thisDay.vacationDay.afternoon = false;
-            thisDay.overTime = 0;
-          }
-        break
-        case 'vacationDayMorning':{
-          thisDay.vacationDay.morning = !thisDay.vacationDay.morning
-          if(thisDay.holiday)thisDay.holiday = !thisDay.holiday;
-          if(thisDay.vacationDay.morning)thisDay.workedDay.morning = false;
-        }
-        break
-        case 'vacationDayAfternoon':{
-          thisDay.vacationDay.afternoon = !thisDay.vacationDay.afternoon
-          if(thisDay.holiday)thisDay.holiday = !thisDay.holiday;
-          if(thisDay.vacationDay.afternoon)thisDay.workedDay.afternoon = false;
-        }
+    toggleHalfDay(day:WorkedDay, checked:boolean, whichHalfDay:string){
+      switch(whichHalfDay){
+        case "morning":
+          if(checked){ day.addMorning() }
+          else{ day.removeMorning() }
+          break
+        case "afternoon":
+          if(checked){ day.addAfternoon() }
+          else{ day.removeAfternoon() }
+          break
       }
+    },
+    changeUsername(username:string){
+      this.username = username
+    },
+    changeCustomer(customer:string){
+      this.customer = customer
     }
-
-  },
+ },
 
   getters: {
-    getDays(): Day[] {
-      if(this.arrayOfDays.length > 1) {
-        return this.arrayOfDays;
+    getDays: (state) => {
+      if(state.arrayOfDays.length > 1) {
+        return state.arrayOfDays;
       } else {
         const store = useDaysStore();
         store.addDays();
-        return this.arrayOfDays;
+        return state.arrayOfDays;
       }
+    },
+    getArrayOfDays: (state) => {
+      return state.arrayOfDays
     },
     getSingleDay: (state) => {
       return (dayDate:number):Day | null => state.arrayOfDays.find((day):boolean => day.date.getDate() === dayDate) || null;
     },
-    getWorkedDays(): number {
-      let count = 0
-      this.arrayOfDays.forEach(day => {
-        if(day.workedDay.morning)count += 0.5
-        if(day.workedDay.afternoon)count += 0.5
+    getTotalWorked: (state) => {
+      let workedDayCouter = 0
+      state.arrayOfDays.forEach(day => {
+        if(day instanceof WorkedDay){
+          workedDayCouter += day.totalWorked()
+        }
       })
-      return count
-    },
-    getOvertime(): number {
-      let count = 0
-      this.arrayOfDays.forEach(day => {
-        count += day.overTime
-      })
-      return count
-    },
-    getHoliday(): number {
-      let count = 0
-      this.arrayOfDays.forEach(day => {
-        if(day.holiday)count += 1
-      })
-      return count
-    },
-    getVacationDay(): number {
-      let count = 0
-      this.arrayOfDays.forEach(day => {
-        if(day.vacationDay.morning)count += 0.5;
-        if(day.vacationDay.afternoon)count += 0.5
-      })
-      return count
-    },
+      return workedDayCouter
+    }
   },
 });

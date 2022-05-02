@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { Day, WorkedDay } from '@/models/day';
 import SingleDay from '@/components/SingleDay.vue'
 import { useDaysStore } from '@/stores/daysStore'
-import { computed } from '@vue/reactivity';
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const store = useDaysStore();
-const daysList = store.getDays;
+const daysList = computed(():Day[] | [] => store.getDays)
 
 function toggleAllDays(evt: Event){
   const target = evt.target as HTMLInputElement
@@ -12,111 +15,88 @@ function toggleAllDays(evt: Event){
 }
 
 const isAllDaysChecked = computed(():boolean => {
-  return daysList
-    .filter(day => day.date.getDay() != 6 && day.date.getDay() != 0)
-    .every(day => day.workedDay.morning && day.workedDay.afternoon)
+  return store.getArrayOfDays
+    .filter(day => day instanceof WorkedDay)
+    .every(day => day.morning && day.afternoon);
 })
 
+function isMainView(){
+  if(route.path == "/"){
+    return true
+  } else {
+    return false
+  }
+}
+//console.log(store.arrayOfDays)
 </script>
 
 <template>
-  <div class="table">
+  <div class="table-of-days">
     <div class="left-column">
       <div>Jours</div>
       <div>
-        Jours travaillés*
+        Jours travaillés
         <input
+          v-if="isMainView()"
           type="checkbox"
-          name="checkAllDay"
           :checked="isAllDaysChecked"
           @change="toggleAllDays"
         >
       </div>
-      <div>Jours fériés*</div>
-      <div>Congés payés*</div>
-      <div>Nbre h supp</div>
     </div>
+
     <div class="days-container">
-      <single-day
+      <SingleDay
         v-for="day in daysList"
-        :key="day.date.toString()"
+        :key="day.date.getDay"
         :day="day"
       />
     </div>
-
     <div class="right-column">
-      <div>TOTAL</div>
-      <div>{{ store.getWorkedDays }}</div>
-      <div>{{ store.getHoliday }}</div>
-      <div>{{ store.getVacationDay }}</div>
-      <div>{{ store.getOvertime }}</div>
+      <div>Total</div>
+      <div><p>{{ store.getTotalWorked }}</p></div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
-.table {
+<style lang="scss">
+.table-of-days {
   display: flex;
   text-align: center;
-  color: #350756;
+  height: 100px;
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
   & .left-column {
-    display: flex;
-    flex-direction: column;
-    & div {
-      flex: 1;
-      padding: 5px;
-      border: 1px solid #350756;
-      width: 85px;
-      text-align: center;
-    }
-    & :first-child {
-      font-weight: bold;
+    border: 1px solid $main-color;
+    border-right: none;
+    & div:first-child {
+      border-bottom: 1px solid $main-color;
+      height: 38%
     }
   }
-
   & .right-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-
-    & div {
-      flex: 1;
-      padding: 5px;
-      border: 1px solid $main-color;
-      &:nth-of-type(1){
-        flex: 0.6;
-      }
-      &:nth-of-type(2) {
-        flex: 1.5;
-      }
-      &:nth-of-type(3) {
-        flex: 0.75;
-      }
-      &:nth-of-type(4) {
-        flex: 1.5;
-      }
-      &:nth-of-type(5) {
-        flex: 0.7;
-      }
+    border: 1px solid $main-color;
+    width: 70px;
+    & div:nth-of-type(1) {
+      border-bottom: 1px solid $main-color;
+      height: 38%
+    }
+    & div:nth-of-type(2) {
+      height: 61%
     }
 
-    & :first-child {
-      background-color: $main-color;
-      font-weight: bold;
-      color: white;
-      height: 19.2px;
-    }
-
-    & div:nth-of-type(2){
-      height: 39px;
-    }
   }
-
-  .days-container {
+  & .days-container{
     display: flex;
     flex-direction: row;
+    & div {
+      text-align: center;
+    }
+  }
+  & .left-column{
+    & div {
+      width: 150px;
+    }
   }
 }
 </style>

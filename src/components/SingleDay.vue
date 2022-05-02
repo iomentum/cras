@@ -1,122 +1,99 @@
 <script setup lang="ts">
-import { Day } from '@/models/day'
-import { computed } from '@vue/reactivity';
+import { Day, WorkedDay } from '@/models/day'
 import { useDaysStore } from '@/stores/daysStore'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 const store = useDaysStore();
 
 // eslint-disable-next-line no-undef
 const props = defineProps<{ day: Day }>()
 
-const isWeekEnd = computed(():boolean => {
-  const dayNumber:number = props.day.date.getDay()
-  return dayNumber === 6 || dayNumber === 0
-});
-
-const thisDay = props.day.date.getDate()-1
-
-function toggle(event: Event){
-  const target = event.target as HTMLInputElement
-  store.changeDayProps(thisDay, target.name)
-}
-function changeOvertime(event: Event){
-  const target = event.target as HTMLInputElement
-  store.changeOvertime(thisDay, parseInt(target.value))
+function toggleHalfDay(evt: Event){
+  let target = evt.target as HTMLInputElement
+  store.toggleHalfDay(props.day, target.checked, target.name)
 }
 
-
+function isMainView(){
+  if(route.path == "/"){
+    return true
+  } else {
+    return false
+  }
+}
 </script>
 
 <template>
-  <div :class="[{ weekend: isWeekEnd }, 'day']">
-    <div> {{ day.date.getDate() }} </div>
-    <div>
+  <div
+    v-if="isMainView()"
+    class="day"
+  >
+    <div>{{ props.day.getDayDate().getDate() }}</div>
+    <div
+      v-if="(day instanceof WorkedDay)"
+      class="checkboxes"
+    >
       <input
-        v-if="!isWeekEnd"
         type="checkbox"
         name="morning"
-        :checked="day.workedDay.morning"
-        @change="toggle"
+        :checked="day.morning"
+        @change="toggleHalfDay"
       >
       <input
-        v-if="!isWeekEnd"
         type="checkbox"
         name="afternoon"
-        :checked="day.workedDay.afternoon"
-        @change="toggle"
+        :checked="day.afternoon"
+        @change="toggleHalfDay"
       >
     </div>
-    <div>
-      <input
-        v-if="!isWeekEnd"
-        type="checkbox"
-        name="holiday"
-        :checked="day.holiday"
-        @change="toggle"
-      >
+    <div
+      v-else
+      class="holiday"
+    />
+  </div>
+  <div
+    v-else
+    class="day"
+  >
+    <div>{{ props.day.getDayDate().getDate() }}</div>
+    <div
+      v-if="(day instanceof WorkedDay)"
+      class="total-worked-day"
+    >
+      <p>{{ props.day.totalWorked() }}</p>
     </div>
-    <div>
-      <input
-        v-if="!isWeekEnd"
-        type="checkbox"
-        name="vacationDayMorning"
-        :checked="day.vacationDay.morning"
-        @change="toggle"
-      >
-      <input
-        v-if="!isWeekEnd"
-        type="checkbox"
-        name="vacationDayAfternoon"
-        :checked="day.vacationDay.afternoon"
-        @change="toggle"
-      >
-    </div>
-    <div class="input-overtime">
-      <input
-        v-if="!isWeekEnd"
-        type="number"
-        :value="day.overTime"
-        @change="changeOvertime"
-      >
-    </div>
+    <div
+      v-else
+      class="holiday"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 
-.weekend{
-  background-color: #EDEAEA;
-}
-.day {
+.day{
   display: flex;
   flex-direction: column;
-  width: 38px;
-  text-align: center;
-  & > * {
-    padding: 5px;
-    border: 1px solid $main-color;
+  width: 50px;
+  border: 1px solid $main-color;
+  border-right: none;
+  & .total-worked-day {
+    height: 61%
   }
-
-  & :first-child {
-    font-weight: bold;
-    background-color: white;
+  & .checkboxes {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-left: 15px;
+    justify-content: space-around
   }
-
-  & .input-overtime {
-    text-align: center;
-
-    & input {
-      border: none;
-      width: 100%;
-      -moz-appearance: textfield;
-      text-align: center;
-      background-color : #ffffff00;
-    }
+  & div:nth-child(1){
+    height: 38%;
+    border-bottom:  1px solid $main-color;
   }
-}
-
-.input-overtime input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+  & .holiday {
+  background-color: #EDEAEA;
+  height: 61%
+  }
 }
 </style>

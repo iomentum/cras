@@ -1,49 +1,34 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import TableDays from '@/components/TableDays.vue'
-import TheHeader from './components/TheHeader.vue';
+import TheHeader from '@/components/TheHeader.vue';
+import { useDaysStore } from '@/stores/daysStore'
+
+const store = useDaysStore();
+store.addDays()
 
 </script>
 
 <template>
   <TheHeader />
-  <TableDays />
+  <router-view />
 </template>
 
 <style lang="scss">
 #app {
   font-family: 'bau-regular', sans-serif;
-  font-size: 12px;
+  font-size: 19px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #426485;
   margin: 0 auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 body{
   margin:0;
 }
-
-.table{
-  & .left-column, .right-column, .days-container>.day{
-    & div{
-      &:nth-of-type(1){
-        flex: 0.6;
-      }
-      &:nth-of-type(2) {
-        flex: 1.5;
-      }
-      &:nth-of-type(3) {
-        flex: 0.75;
-      }
-      &:nth-of-type(4) {
-        flex: 1.5;
-      }
-      &:nth-of-type(5) {
-        flex: 0.7;
-      }
-    }
-  }
+input{
+  font-family: "bau-regular";
 }
 
 @font-face {
