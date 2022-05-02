@@ -9,7 +9,7 @@ const route = useRoute()
 const store = useDaysStore();
 const daysList = computed(():Day[] | [] => store.getDays)
 
-function toggleAllDays(evt: Event){
+function toggleAllDays(evt: Event) {
   const target = evt.target as HTMLInputElement
   store.toggleAllDays(target.checked)
 }
@@ -27,7 +27,6 @@ function isMainView(){
     return false
   }
 }
-//console.log(store.arrayOfDays)
 </script>
 
 <template>
@@ -53,7 +52,7 @@ function isMainView(){
       />
     </div>
     <div class="right-column">
-      <div>Total</div>
+      <div>TOTAL</div>
       <div><p>{{ store.getTotalWorked }}</p></div>
     </div>
   </div>
@@ -63,26 +62,33 @@ function isMainView(){
 .table-of-days {
   display: flex;
   text-align: center;
-  height: 100px;
+  height: 90px;
   margin: 0 auto;
   width: 90%;
+  font-family: "bau-bold";
+  color: black;
   & .left-column {
     border: 1px solid $main-color;
+    font-family:'Bau-regular';
     border-right: none;
     & div:first-child {
+      font-family: "bau-bold";
       border-bottom: 1px solid $main-color;
-      height: 38%
+      height: 40%;
+      color: $main-color;
     }
   }
   & .right-column {
     border: 1px solid $main-color;
-    width: 70px;
     & div:nth-of-type(1) {
       border-bottom: 1px solid $main-color;
-      height: 38%
+      height: 40%;
+      background-color: $main-color;
+      color: white;
+      width: 80px;
     }
     & div:nth-of-type(2) {
-      height: 61%
+      height: 59%;
     }
 
   }
