@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { Day, WorkedDay } from '@/models/day'
-import { useDaysStore } from '@/stores/daysStore'
-import { useRoute } from 'vue-router'
+import { Day, WorkedDay, Holiday } from '@/models/day';
+import { useDaysStore } from '@/stores/daysStore';
+import { useRoute } from 'vue-router';
 
-const route = useRoute()
+const route = useRoute();
 const store = useDaysStore();
 
 // eslint-disable-next-line no-undef
-const props = defineProps<{ day: Day }>()
+const props = defineProps<{ day: WorkedDay | Day | Holiday }>();
 
-function toggleHalfDay(evt: Event){
-  let target = evt.target as HTMLInputElement
-  store.toggleHalfDay(props.day, target.checked, target.name)
+function toggleHalfDay (evt: Event) {
+  let target = evt.target as HTMLInputElement;
+  if(props.day instanceof WorkedDay) {
+    store.toggleHalfDay(props.day, target.checked, target.name);
+  }
 }
 
-function isMainView(){
-  if(route.path == "/"){
-    return true
+function isMainView () {
+  if(route.path == "/") {
+    return true;
   } else {
-    return false
+    return false;
   }
 }
 </script>
@@ -70,34 +72,38 @@ function isMainView(){
 </template>
 
 <style scoped lang="scss">
-
-.day{
+.day {
   display: flex;
   flex-direction: column;
   width: 45px;
   border: 1px solid $main-color;
-  border-right: none;
+  border-right: 0;
   color: $main-color;
+
   & p {
-    font-family: 'bau-regular'
+    font-family: "bau-regular", Arial, Helvetica, sans-serif;
   }
+
   & .total-worked-day {
-    height: 59%
+    height: 59%;
   }
+
   & .checkboxes {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     margin-left: 15px;
-    justify-content: space-around
+    justify-content: space-around;
   }
-  & div:nth-child(1){
+
+  & div:nth-child(1) {
     height: 40%;
-    border-bottom:  1px solid $main-color;
+    border-bottom: 1px solid $main-color;
   }
+
   & .holiday {
-  background-color: #EDEAEA;
-  height: 59%
+    background-color: #edeaea;
+    height: 59%;
   }
 }
 </style>
