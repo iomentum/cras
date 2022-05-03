@@ -1,5 +1,5 @@
 export const getHolidays = async (date: Date): Promise<string[]> => {
-  const holidaysURL = `https://calendrier.api.gouv.fr/jours-feries/metropole/${date.getFullYear()}.json`
+  const holidaysURL = `https://calendrier.api.gouv.fr/jours-feries/metropole/${date.getFullYear()}.json`;
 
   return await fetch(holidaysURL)
     .then(response => response.json().then(data => ({
@@ -7,9 +7,9 @@ export const getHolidays = async (date: Date): Promise<string[]> => {
         status: response.status
       }))
     .then(res => {
-      return res.data
+      return res.data;
     }
   ));
-}
+};
 
-export default getHolidays
+export default getHolidays;

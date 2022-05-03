@@ -27,13 +27,16 @@
 </template>
 
 <style lang="scss">
+
 .links {
-  text-align:center;
+  text-align: center;
+
   & a {
     text-decoration: none;
-    font-size:11px;
+    font-size: 11px;
     padding-left: 10px;
     color: black;
+
     &:visited {
       text-decoration: none;
     }
