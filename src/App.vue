@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue';
-import { useDaysStore } from '@/stores/daysStore'
+import { useDaysStore } from '@/stores/daysStore';
 
 const store = useDaysStore();
-store.addDays()
+store.addDays();
 
 </script>
 
@@ -13,8 +13,9 @@ store.addDays()
 </template>
 
 <style lang="scss">
+
 #app {
-  font-family: 'bau-regular', sans-serif;
+  font-family: "bau-regular", sans-serif;
   font-size: 19px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,21 +25,22 @@ store.addDays()
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-body{
-  margin:0;
+
+body {
+  margin: 0;
 }
-input{
-  font-family: "bau-regular";
+
+input {
+  font-family: "bau-regular", Arial, Helvetica, sans-serif;
 }
 
 @font-face {
   font-family: "bau-regular";
-  src: local("bau-regular"),
-   url(./fonts/Bau/bau-regular.ttf) format("truetype");
+  src: local("bau-regular"), url(./fonts/Bau/bau-regular.ttf) format("truetype");
 }
+
 @font-face {
   font-family: "Bau-Bold";
-  src: local("Bau-Bold"),
-   url(./fonts/Bau/Bau-Bold.otf) format("opentype");
+  src: local("Bau-Bold"), url(./fonts/Bau/Bau-Bold.otf) format("opentype");
 }
 </style>

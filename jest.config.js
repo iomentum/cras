@@ -1,10 +1,12 @@
-export default {
-  preset: 'vite-jest',
-  verbose: true,
-
-  testMatch: [
-    '**/*.test.?(m)js?(x)',
+module.exports = {
+  moduleFileExtensions: [
+    'js',
+    'ts',
+    'json',
+    'vue'
   ],
-  testEnvironment: 'jest-environment-jsdom',
-  moduleDirectories: ["node_modules", "src"],
-}
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.vue$': 'vue-jest'
+  }
+};

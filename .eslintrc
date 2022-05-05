@@ -14,5 +14,10 @@
     "ecmaVersion": 2021
   },
   "plugins": [],
-  "rules": {}
+  "rules": {
+    "comma-dangle": ["error", "never"],
+    "semi": [2, "always"],
+    "space-before-blocks": [2, "always"],
+    "space-before-function-paren": [2, "always"]
+  }
 }
