@@ -5,6 +5,7 @@ import { useDaysStore } from '@/stores/daysStore';
 const store = useDaysStore();
 store.addDays();
 
+
 </script>
 
 <template>

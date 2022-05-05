@@ -26,6 +26,8 @@ export const useDaysStore = defineStore("days", {
       } else {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
+        console.log(this.arrayOfDays);
+
       }
 
       this.loading = false;
