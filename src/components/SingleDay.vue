@@ -16,18 +16,13 @@ function toggleHalfDay (evt: Event) {
   }
 }
 
-function isMainView () {
-  if(route.path == "/") {
-    return true;
-  } else {
-    return false;
-  }
-}
+const isMainView = route.path == "/";
+
 </script>
 
 <template>
   <div
-    v-if="isMainView()"
+    v-if="isMainView"
     class="day"
   >
     <div>{{ props.day.getDayDate().getDate() }}</div>

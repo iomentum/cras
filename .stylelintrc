@@ -1,6 +1,0 @@
-{
-  "rules": {
-    "no-irregular-whitespace": true,
-    "custom-property-no-missing-var-function": true
-  }
-}

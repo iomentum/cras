@@ -8,8 +8,10 @@ export const getHolidays = async (date: Date): Promise<string[]> => {
       }))
     .then(res => {
       return res.data;
-    }
-  ));
+    }))
+    .catch((error) => {
+      alert(error);
+    });
 };
 
 export default getHolidays;
