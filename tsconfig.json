@@ -17,6 +17,6 @@
     },
     "types": ["vite/client", "@types/jest"],
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/router/index.ts", "src/components/SingleDay.spec.js", "src/components/SingleDay.test.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/router/index.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

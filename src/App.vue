@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import TheHeader from '@/components/TheHeader.vue';
+import { ref, onMounted, onBeforeUnmount, onUpdated } from 'vue';
+import TheHeader from '@/components/HeaderFooter/TheHeader.vue';
 import { useDaysStore } from '@/stores/daysStore';
+import { useUserStore } from '@/stores/userStore';
+import 'firebase/compat/storage';
 
-const store = useDaysStore();
-store.addDays();
 
-
+//Checkif user
+// -> If Yes, and store User info empty, fetch
 </script>
 
 <template>

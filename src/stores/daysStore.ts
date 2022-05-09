@@ -1,18 +1,20 @@
 import { defineStore } from 'pinia';
 import { Day, WorkedDay } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
+import { useUserStore } from './userStore';
+import { getCra } from '@/services/cras';
 
 export const useDaysStore = defineStore("days", {
   state: () :{
     arrayOfDays: Day[] | [],
-    username: string,
-    customer: string,
-    loading: boolean
+    signed: boolean,
+    dateOfSignature: string,
+    loading: boolean,
   } => {
     return {
       arrayOfDays: [],
-      username: "",
-      customer: "",
+      dateOfSignature: '',
+      signed: false,
       loading: false
     };
   },
@@ -20,16 +22,24 @@ export const useDaysStore = defineStore("days", {
     async addDays (date?:Date) {
       this.arrayOfDays= [];
       this.loading = true;
+      this.signed = false;
+      this.dateOfSignature = '';
 
       if (date) {
-        this.arrayOfDays = await generateDays(date);
+        const month = `${date.getMonth()+1}`.padStart(2, '0');
+        const year = date.getFullYear();
+        const yearmonth = `${year}-${month}`;
+        const userStore = useUserStore();
+
+        if (userStore.user.isLogged) {
+          await getCra(yearmonth)
+        } else {
+          this.arrayOfDays = await generateDays(date);
+        }
       } else {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
-        console.log(this.arrayOfDays);
-
       }
-
       this.loading = false;
     },
     toggleAllDays (isChecked: boolean) {
@@ -43,6 +53,9 @@ export const useDaysStore = defineStore("days", {
         });
       }
     },
+    setArrayOfDays (array:Day[]) {
+      this.arrayOfDays = array
+    },
     toggleHalfDay (day:WorkedDay, checked:boolean, whichHalfDay:string) {
       switch(whichHalfDay) {
         case "morning":
@@ -55,11 +68,8 @@ export const useDaysStore = defineStore("days", {
           break;
       }
     },
-    changeUsername (username:string) {
-      this.username = username;
-    },
-    changeCustomer (customer:string) {
-      this.customer = customer;
+    resetDaysStore() {
+      this.arrayOfDays = []
     }
  },
 
@@ -80,13 +90,28 @@ export const useDaysStore = defineStore("days", {
       return (dayDate:number):Day | null => state.arrayOfDays.find((day):boolean => day.date.getDate() === dayDate) || null;
     },
     getTotalWorked: (state) => {
-      let workedDayCouter = 0;
+      let workedDayCounter = 0;
       state.arrayOfDays.forEach(day => {
         if(day instanceof WorkedDay) {
-          workedDayCouter += day.totalWorked();
+          workedDayCounter += day.totalWorked();
         }
       });
-      return workedDayCouter;
+      return workedDayCounter;
+    },
+    isAllDaysChecked: (state) => {
+      return state.arrayOfDays.every(day => {if(day instanceof WorkedDay)day.morning && day.afternoon});
+    },
+    getDateString: (state) => {
+      if (!state.arrayOfDays[0]) return null
+
+      const month = `${state.arrayOfDays[0].date.getMonth()+1}`.padStart(2, '0');
+      const year = state.arrayOfDays[0].date.getFullYear();
+
+      const date = `${year}-${month}`
+      return date
+    },
+    getSignatureDate: (state) => {
+      return state.dateOfSignature
     }
   }
 });

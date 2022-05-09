@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TableDays from '@/components/TableDays.vue';
-import UserInputs from '@/components/UserInputs.vue';
-import TheSignatures from '@/components/TheSignatures.vue';
-import TheFooter from '@/components/TheFooter.vue';
-import CostsAndComments from '@/components/CostsAndComments.vue';
+import TableDays from '@/components/Cra/TableDays.vue';
+import UserInputs from '@/components/User/UserInputs.vue';
+import TheSignatures from '@/components/User/TheSignatures.vue';
+import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
+import CostsAndComments from '@/components/CostsComments/CostsAndComments.vue';
 </script>
 
 <template>

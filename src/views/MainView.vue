@@ -1,33 +1,46 @@
 <script setup lang="ts">
-import TableDays from '@/components/TableDays.vue';
-import UserInputs from '@/components/UserInputs.vue';
-import TheFooter from '@/components/TheFooter.vue';
-import { Day, Holiday, WorkedDay } from '@/models/day';
+import TableDays from '@/components/Cra/TableDays.vue';
+import UserInputs from '@/components/User/UserInputs.vue';
+import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
+import CostsAndComments from '@/components/CostsComments/CostsAndComments.vue';
+import { useDaysStore } from '@/stores/daysStore';
+import { createOrUpdateCraDB } from '@/services/cras'
 
-console.log(new Date(2022,4,1));
-console.log(new Holiday(new Date(2022,4,1)), new WorkedDay(new Date(2022,4,1)));
+const daysStore = useDaysStore();
+
 </script>
 
 <template>
   <UserInputs />
-  <TableDays />
+  <TableDays v-if="!daysStore.signed"/>
+  <CostsAndComments v-if="!daysStore.signed"/>
   <div class="button">
-    <router-link id="link" to="/Print">
+    <router-link v-if="!daysStore.signed" @click="createOrUpdateCraDB" class="link" to="/Print">
       Valider
     </router-link>
+  </div>
+  <div v-if="daysStore.signed">
+    <h1 class="warn">Ce cra est déjà signé, vous ne pouvez plus le modifier</h1>
+    <div class="button">
+      <router-link class="link" to="/Print">Voir le cra</router-link>
+    </div>
   </div>
   <TheFooter />
 </template>
 
 <style scoped lang="scss">
-
+.warn {
+  color: $main-color;
+  margin: 0 auto;
+  width: 50%;
+}
 .button {
   color: $main-color;
   margin: 0 auto;
   margin-top: 20px;
   width: 50%;
   text-align: center;
-  & #link {
+  & .link {
     background-color: #f1f1f1;
     padding: 5px 10px 5px 10px;
     border: 1px solid $main-color;
@@ -43,4 +56,3 @@ console.log(new Holiday(new Date(2022,4,1)), new WorkedDay(new Date(2022,4,1)));
   }
 }
 </style>
-

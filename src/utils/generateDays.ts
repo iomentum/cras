@@ -11,7 +11,7 @@ export const generateDays = async (date: Date): Promise<Day[]> => {
     .map((_, index): Day => {
       const date = new Date(dateYear, month, index);
       if (isWeekend(date) || isHoliday(date, holidays)) return new Holiday(date);
-      return new WorkedDay(date);
+      return new WorkedDay(date, false, false);
     })
     .filter(({ date }) => date.getMonth() === month);
   return days;

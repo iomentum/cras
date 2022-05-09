@@ -3,35 +3,10 @@ import { Day, WorkedDay, Holiday } from './day'
 const date = new Date(2022,4,5)
 
 const day = new Day(date)
-const workedDay = new WorkedDay(date)
+const workedDay = new WorkedDay(date, false, false)
 const holiday = new Holiday(date)
 
-
 describe('Day,WorkedDay,Holiday class tests',() => {
-
-  it('sould return day date', () => {
-    expect(day.date).toBe(date)
-  });
-
-  it('sould return day date', () => {
-    expect(day.getDayDate()).toBe(date)
-  });
-
-  it('sould return holiday date', () => {
-    expect(holiday.date).toBe(date)
-  });
-
-  it('sould return holiday date', () => {
-    expect(holiday.getDayDate()).toBe(date)
-  });
-
-  it('should return workedDay date', () => {
-    expect(workedDay.date).toBe(date)
-  });
-
-  it('should return workedDay date', () => {
-    expect(workedDay.getDayDate()).toBe(date)
-  });
 
   it('should returnd workedDay morning state', () => {
     expect(workedDay.morning).toBeFalsy
@@ -74,4 +49,5 @@ describe('Day,WorkedDay,Holiday class tests',() => {
     workedDay.removeAfternoon()
     expect(workedDay.totalWorked()).toBe(0)
   });
+
 });

@@ -2,21 +2,25 @@
 import { Day, WorkedDay, Holiday } from '@/models/day';
 import { useDaysStore } from '@/stores/daysStore';
 import { useRoute } from 'vue-router';
+import { computed } from '@vue/reactivity';
+import { defineProps } from 'vue';
 
 const route = useRoute();
 const store = useDaysStore();
 
-// eslint-disable-next-line no-undef
 const props = defineProps<{ day: WorkedDay | Day | Holiday }>();
 
-function toggleHalfDay (evt: Event) {
+
+const toggleHalfDay = (evt: Event) => {
   let target = evt.target as HTMLInputElement;
-  if(props.day instanceof WorkedDay) {
+  if (props.day instanceof WorkedDay) {
     store.toggleHalfDay(props.day, target.checked, target.name);
   }
-}
+};
 
-const isMainView = route.path == "/";
+const isMainView = computed(() => {
+  return route.path == "/";
+});
 
 </script>
 
@@ -30,6 +34,10 @@ const isMainView = route.path == "/";
       v-if="(day instanceof WorkedDay)"
       class="checkboxes"
     >
+      <!-- <md-checkbox v-model="morning">
+        Boolean
+      </md-checkbox> -->
+
       <input
         type="checkbox"
         name="morning"
@@ -70,7 +78,6 @@ const isMainView = route.path == "/";
 .day {
   display: flex;
   flex-direction: column;
-  width: 45px;
   border: 1px solid $main-color;
   border-right: 0;
   color: $main-color;
@@ -80,25 +87,26 @@ const isMainView = route.path == "/";
   }
 
   & .total-worked-day {
-    height: 59%;
   }
 
   & .checkboxes {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    margin-left: 15px;
+    margin-left: 0;
     justify-content: space-around;
   }
 
   & div:nth-child(1) {
-    height: 40%;
+    padding: 5px 4px;
+    min-width: 20px;
+    font-size: 1rem;
     border-bottom: 1px solid $main-color;
   }
 
   & .holiday {
     background-color: #edeaea;
-    height: 59%;
+    height: 100%;
   }
 }
 </style>

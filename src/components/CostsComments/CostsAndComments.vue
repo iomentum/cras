@@ -13,26 +13,7 @@
       <td>MISSIONS</td>
       <td>Montant</td>
     </tr>
-    <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
-    </tr>
-    <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
-    </tr>
-    <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
-    </tr>
-    <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
-    </tr>
+
     <tr>
       <td
         class="titles"
