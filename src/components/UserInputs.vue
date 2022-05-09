@@ -77,6 +77,8 @@ function isMainView () {
         v-if="isMainView()"
         type="month"
         :value="`${date.getFullYear()}-${monthString()}`"
+        :min="`${date.getFullYear()-10}-${monthString()}`"
+        :max="`${date.getFullYear()+3}-${monthString()}`"
         @change="changeMonth"
       >
       <p v-else>

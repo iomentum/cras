@@ -2,8 +2,6 @@ import {generateDays} from '@/utils/generateDays';
 import { Holiday, WorkedDay } from '@/models/day'
 declare var global: any;
 
-
-
 test('Doit retourner un tableau des jours du mois de mai', () => {
   global.fetch = jest.fn(() =>
     Promise.resolve({
@@ -19,7 +17,7 @@ test('Doit retourner un tableau des jours du mois de mai', () => {
         "2022-11-01": "Toussaint",
         "2022-11-11": "11 novembre",
         "2022-12-25": "Jour de Noël"
-      }),
+      })
     })
   );
   // Setup
@@ -62,6 +60,8 @@ test('Doit retourner un tableau des jours du mois de mai', () => {
 
   generateDays(date).then(data => {
     // Test Expect
+    expect(data.length).toBeGreaterThan(27)
+    expect(data.length).not.toBeGreaterThan(31)
     expect(data).toStrictEqual(expectedGeneratedDays);
   });
 });

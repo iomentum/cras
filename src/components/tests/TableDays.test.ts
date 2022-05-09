@@ -57,22 +57,7 @@ describe('TableDays unit test', () => {
     }
   });
 
-  test('is comp exist', () => {
-    expect(wrapper.exists()).toBe(true)
-  });
-
-  describe('Testing classes',() => {
-    test('is component contains "table-of-day" ?',() => {
-      expect(wrapper.classes()).toContain('table-of-days')
-    });
-    test('is left-column exist ?',() => {
-      expect(wrapper.find(".left-column").exists()).toBe(true)
-    });
-    test('is right-column exist ?',() => {
-      expect(wrapper.find(".days-container").exists()).toBe(true)
-    });
-    test('is right-column exist ?',() => {
-      expect(wrapper.find(".right-column").exists()).toBe(true)
-    });
-  });
+  it('renders correctly', () => {
+    expect(wrapper.element).toMatchSnapshot()
+  })
 });

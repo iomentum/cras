@@ -2,10 +2,6 @@
 import TableDays from '@/components/TableDays.vue';
 import UserInputs from '@/components/UserInputs.vue';
 import TheFooter from '@/components/TheFooter.vue';
-import { Day, Holiday, WorkedDay } from '@/models/day';
-
-console.log(new Date(2022,4,1));
-console.log(new Holiday(new Date(2022,4,1)), new WorkedDay(new Date(2022,4,1)));
 </script>
 
 <template>
@@ -43,4 +39,3 @@ console.log(new Holiday(new Date(2022,4,1)), new WorkedDay(new Date(2022,4,1)));
   }
 }
 </style>
-

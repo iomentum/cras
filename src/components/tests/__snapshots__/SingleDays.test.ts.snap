@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableDays unit test renders correctly 1`] = `
+<div
+  class="day"
+>
+  <div>
+    10
+  </div>
+  <div
+    class="checkboxes"
+  >
+    <input
+      name="morning"
+      type="checkbox"
+    />
+    <input
+      name="afternoon"
+      type="checkbox"
+    />
+  </div>
+</div>
+`;
