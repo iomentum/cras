@@ -2,6 +2,8 @@
 import TableDays from '@/components/TableDays.vue';
 import UserInputs from '@/components/UserInputs.vue';
 import TheFooter from '@/components/TheFooter.vue';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 </script>
 
 <template>

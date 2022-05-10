@@ -12,7 +12,9 @@
     "lint:style": "stylelint src/**/*.{css,scss,vue}"
   },
   "dependencies": {
+    "@firebase/app-types": "^0.7.0",
     "@types/node": "^17.0.31",
+    "firebase": "^9.8.0",
     "pinia": "^2.0.13",
     "vite-jest": "^0.1.4",
     "vue": "^3.2.25"
