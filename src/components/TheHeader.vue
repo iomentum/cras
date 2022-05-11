@@ -3,6 +3,8 @@ import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+import { userSignOut, userSignIn } from '@/firebaseauth/user';
+
 const router = useRouter()
 const user = firebase.auth().currentUser;
 const isLoggedIn = ref(true)
@@ -16,7 +18,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 })
 
 const signOut = () => {
-  firebase.auth().signOut()
+  userSignOut()
   router.push('/login')
 }
 
@@ -28,7 +30,12 @@ const signOut = () => {
     <div>
       <p>COMPTE RENDU D'ACTIVITÉ </p>
       <div v-if="isLoggedIn" class="user-infos">
-        <button @click="signOut">Déconnexion</button>
+        <div class="dropdown-menu">
+          <div>H</div>
+        </div>
+          <div class="popper">
+            <button @click="signOut">Déconnexion</button>
+          </div>
       </div>
     </div>
     <img src="src\assets\IOmentum_Logo_White.png">
@@ -37,7 +44,36 @@ const signOut = () => {
 </template>
 
 <style scoped lang="scss">
+.dropdown-menu {
+  display: inline-flex;
+  background-color: #fbf5f3;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-family: "bau-bold";
+  color: black;
+  align-items: center;
+  margin-left: 50px;
+  margin-top: 5px;
+  padding-left: 0px;
+  & div:first-child {
+    margin-left: 11px;
+  }
+  &
 
+  &:hover .popper{
+    visibility: visible;
+  }
+}
+.popper {
+  width: 200px;
+  background-color: white;
+  visibility: visible;
+  border: 1px solid grey;
+  &:hover {
+    visibility: visible;
+  }
+}
 .header {
   display: flex;
   height: 160px;

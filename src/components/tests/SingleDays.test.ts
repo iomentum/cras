@@ -6,7 +6,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { createApp } from 'vue';
 import router from '@/router/index';
 
-const workedDay = new WorkedDay(new Date(2022,4,10))
+const workedDay = new WorkedDay(new Date(2022,4,11))
 
 describe('TableDays unit test', () => {
   const app = createApp({})

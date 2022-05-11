@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+import { userSignOut, userSignIn, userRegistration } from '@/firebaseauth/user';
 
 const router = useRouter()
 const route = useRoute()
@@ -17,40 +18,16 @@ const isLoggedIn = ref(false)
 const user = firebase.auth().currentUser;
 
 const register = () => {
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email.value, password.value)
-    .then((data) => {
-    })
-    .catch(error => {
-      console.log(error.code)
-      alert(error.message);
-    });
+  userRegistration(email.value, password.value)
 }
 
 const signIn = () => {
-  firebase
-  .auth()
-  .signInWithEmailAndPassword(email.value, password.value)
-  .then((data) => {
-    console.log('Successfully signed in!',firebase.auth().currentUser);
-    const user = firebase.auth().currentUser;
-    router.push("/")
-  })
-  .catch(error => {switch (error.code) {
-    case 'auth/invalid-email':
-      errMsg.value = 'Invalid email'
-      break
-    case 'auth/user-not-found':
-      errMsg.value = 'No account with that email was found'
-      break
-    case 'auth/wrong-password':
-      errMsg.value = 'Incorrect password'
-      break
-    default:
-      errMsg.value = 'Email or password was incorrect'
-      break
-  }});
+  userSignIn(email.value, password.value)
+  router.push('/')
+}
+
+function signOut() {
+  userSignOut()
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -60,17 +37,10 @@ firebase.auth().onAuthStateChanged(function(user) {
     isLoggedIn.value = false
   }})
 
-const signOut = () => {
-  firebase.auth().signOut()
+function isLoginView () {
+  return route.path == "/login"
 }
 
-function isLoginView () {
-  if(route.path == "/login") {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 </script>
 
@@ -83,6 +53,7 @@ function isLoginView () {
       <input type="password" placeholder="Mot de passe" v-model="password" />
       <button @click="signIn">Connexion</button>
       <router-link class="nav-link" to="/register">S'inscrire</router-link>
+      <router-link class="link" to="/">Continuer sans connexion</router-link>
     </div>
   </div>
 
@@ -101,6 +72,7 @@ function isLoginView () {
       <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Mot de passe" v-model="password" />
       <button @click="signIn">S'inscrire</button>
+      <router-link class="nav-link" to="/login">Se connecter</router-link>
     </div>
   </div>
 </div>
@@ -162,6 +134,9 @@ function isLoginView () {
           background: white;
           color: $main-color;
         }
+      }
+      & .link{
+        color: grey;
       }
     }
   }
