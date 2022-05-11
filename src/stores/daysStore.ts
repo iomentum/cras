@@ -27,7 +27,6 @@ export const useDaysStore = defineStore("days", {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
       }
-
       this.loading = false;
     },
     toggleAllDays (isChecked: boolean) {
@@ -78,13 +77,13 @@ export const useDaysStore = defineStore("days", {
       return (dayDate:number):Day | null => state.arrayOfDays.find((day):boolean => day.date.getDate() === dayDate) || null;
     },
     getTotalWorked: (state) => {
-      let workedDayCouter = 0;
+      let workedDayCounter = 0;
       state.arrayOfDays.forEach(day => {
         if(day instanceof WorkedDay) {
-          workedDayCouter += day.totalWorked();
+          workedDayCounter += day.totalWorked();
         }
       });
-      return workedDayCouter;
+      return workedDayCounter;
     }
   }
 });

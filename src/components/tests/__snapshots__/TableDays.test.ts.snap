@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TableDays unit test renders correctly 1`] = `
+<div
+  class="table-of-days"
+  dayslist="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+>
+  <div
+    class="left-column"
+  >
+    <div>
+      Jours
+    </div>
+    <div>
+       Jours travaillés 
+      <input
+        type="checkbox"
+      />
+    </div>
+  </div>
+  <div
+    class="days-container"
+  >
+    
+    
+  </div>
+  <div
+    class="right-column"
+  >
+    <div>
+      TOTAL
+    </div>
+    <div>
+      <p>
+        0
+      </p>
+    </div>
+  </div>
+</div>
+`;

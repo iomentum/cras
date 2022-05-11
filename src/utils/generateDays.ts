@@ -14,7 +14,6 @@ export const generateDays = async (date: Date): Promise<Day[]> => {
       return new WorkedDay(date);
     })
     .filter(({ date }) => date.getMonth() === month);
-    console.log(days)
   return days;
 };
 

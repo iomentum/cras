@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
-import StylelintPlugin from 'vite-plugin-stylelint';
 
 export default defineConfig({
   resolve: {
@@ -9,7 +8,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  plugins: [vue(), StylelintPlugin()],
+  plugins: [vue()],
   css: {
     preprocessorOptions: {
       scss: {
