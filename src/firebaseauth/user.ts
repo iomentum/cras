@@ -13,42 +13,60 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const user = firebase.auth().currentUser;
-let errMsg = ''
 
-export const userRegistration = (email:string, password:string) => {
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((data) => {
-    })
-    .catch(error => {
-      console.log(error.code)
-      alert(error.message);
-    });
+interface ERROR_CODES {
+  [index: string]: string;
+  'auth/invalid-email': string
+  'auth/user-not-found': string
+  'auth/wrong-password': string
+  'auth/email-already-in-use': string
+  'auth/operation-not-allowed': string
+  'auth/weak-password': string
 }
 
-export const userSignIn = (email:string, password:string) => {
-  firebase
-  .auth()
-  .signInWithEmailAndPassword(email, password)
-  .then((data) => {
-    console.log('Successfully signed in!',firebase.auth().currentUser);
-    const user = firebase.auth().currentUser;
-  })
-  .catch(error => {switch (error.code) {
-    case 'auth/invalid-email':
-      errMsg = 'Invalid email'
-      break
-    case 'auth/user-not-found':
-      errMsg = 'No account with that email was found'
-      break
-    case 'auth/wrong-password':
-      errMsg = 'Incorrect password'
-      break
-    default:
-      errMsg = 'Email or password was incorrect'
-      break
-  }});
+const ERROR_MESSAGES: ERROR_CODES = {
+  'auth/invalid-email' : 'invalid email',
+  'auth/user-not-found' : 'User not found',
+  'auth/wrong-password' : 'incorrect password',
+  'auth/email-already-in-use': 'email already used',
+  'auth/operation-not-allowed': 'operation not allowed',
+  'auth/weak-password': 'week password'
+}
+
+export const userRegistration = async (email:string, password:string) => {
+  try {
+    const test = await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password);
+    return {
+      user: test,
+      error: false,
+    }
+  } catch (e) {
+    const { code } = e as { message: string, code: string }
+    return {
+      user: false,
+      error: ERROR_MESSAGES[code],
+    }
+  }
+}
+
+export const userSignIn = async (email:string, password:string) => {
+  try {
+    const test = await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password);
+    return {
+      user: test,
+      error: false,
+    }
+  } catch (e) {
+    const { code } = e as { message: string, code: string }
+    return {
+      user: false,
+      error: ERROR_MESSAGES[code],
+    }
+  }
 }
 
 export const userSignOut = () => {

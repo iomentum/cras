@@ -520,7 +520,7 @@
     "@firebase/util" "1.6.0"
     tslib "^2.1.0"
 
-"@firebase/firestore-types@2.5.0":
+"@firebase/firestore-types@2.5.0", "@firebase/firestore-types@^2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-2.5.0.tgz#16fca40b6980fdb000de86042d7a96635f2bcdd7"
   integrity sha512-I6c2m1zUhZ5SH0cWPmINabDyH5w0PPFHk2UHsjBpKdZllzJZ2TwTkXbDtpHUZNmnc/zAa0WNMNMvcvbb/xJLKA==
@@ -688,7 +688,7 @@
     "@firebase/util" "1.6.0"
     tslib "^2.1.0"
 
-"@firebase/storage-types@0.6.0":
+"@firebase/storage-types@0.6.0", "@firebase/storage-types@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@firebase/storage-types/-/storage-types-0.6.0.tgz#0b1af64a2965af46fca138e5b70700e9b7e6312a"
   integrity sha512-1LpWhcCb1ftpkP/akhzjzeFxgVefs6eMD2QeKiJJUGH1qOiows2w5o0sKCUSQrvrRQS1lz3SFGvNR1Ck/gqxeA==

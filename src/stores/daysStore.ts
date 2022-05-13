@@ -5,14 +5,10 @@ import { generateDays } from '@/utils/generateDays';
 export const useDaysStore = defineStore("days", {
   state: () :{
     arrayOfDays: Day[] | [],
-    username: string,
-    customer: string,
     loading: boolean
   } => {
     return {
       arrayOfDays: [],
-      username: "",
-      customer: "",
       loading: false
     };
   },
@@ -52,12 +48,6 @@ export const useDaysStore = defineStore("days", {
           break;
       }
     },
-    changeUsername (username:string) {
-      this.username = username;
-    },
-    changeCustomer (customer:string) {
-      this.customer = customer;
-    }
  },
 
   getters: {

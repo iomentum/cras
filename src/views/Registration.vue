@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LogAndRegister from "../components/LogAndRegister.vue";
+import LogAndRegister from "@/components/LogAndRegister.vue";
 </script>
 
 <template>

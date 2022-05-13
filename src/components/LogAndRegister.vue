@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/userStore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { userSignOut, userSignIn, userRegistration } from '@/firebaseauth/user';
@@ -13,41 +13,58 @@ const email = ref('')
 const password = ref('')
 const firstName = ref('')
 const lastName = ref('')
-const errMsg = ref('')
+const customer = ref('')
+const errorMsg = ref('')
 const isLoggedIn = ref(false)
 const user = firebase.auth().currentUser;
+const isLoginView = () => route.path == "/login"
+const store = useUserStore();
 
-const register = () => {
-  userRegistration(email.value, password.value)
-}
-
-const signIn = () => {
-  userSignIn(email.value, password.value)
-  router.push('/')
-}
-
-function signOut() {
-  userSignOut()
-}
+let uid = ""
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     isLoggedIn.value = true
+    uid = user.uid
   } else {
     isLoggedIn.value = false
-  }})
+  }
+})
 
-function isLoginView () {
-  return route.path == "/login"
+const register = async () => {
+  const {
+    user, error
+  } = await userRegistration(email.value, password.value)
+  if (user != false) {
+    store.setUserInfos(firstName.value,lastName.value,customer.value,email.value,uid)
+    store.addUser()
+    router.push('/')
+    return
+  }
+  errorMsg.value = error
+}
+
+const signIn = async () => {
+  const {
+    user, error
+  } = await userSignIn(email.value, password.value)
+
+  if (user != false) {
+    router.push('/')
+    return
+  }
+  errorMsg.value = error
 }
 
 
 </script>
 
 <template>
+
 <div class="form">
   <div v-if="isLoginView() && !isLoggedIn" class="container" >
     <h1>Connexion</h1>
+    <div class="error" v-if="errorMsg">{{ errorMsg }}</div>
     <div class="input-container">
       <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Mot de passe" v-model="password" />
@@ -57,24 +74,28 @@ function isLoginView () {
     </div>
   </div>
 
-  <div v-else-if="isLoginView() && isLoggedIn" class="container">
-  <div class="input-container">
-    <h1>Déconnexion</h1>
-    <button @click="signOut" class="sign-out"> Déconnexion </button>
-    </div>
-  </div>
-
-  <div class="container" v-else>
+  <div class="container" v-else-if="!isLoginView() && !isLoggedIn">
     <h1>Inscription</h1>
+    <div class="error" v-if="errorMsg">{{ errorMsg }}</div>
     <div class="input-container">
       <input type="text" placeholder="Prénom" v-model="firstName" />
       <input type="text" placeholder="Nom" v-model="lastName" />
+      <input type="text" placeholder="Client" v-model="customer" />
       <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Mot de passe" v-model="password" />
-      <button @click="signIn">S'inscrire</button>
+      <button @click="register">S'inscrire</button>
       <router-link class="nav-link" to="/login">Se connecter</router-link>
+      <router-link class="link" to="/">Continuer sans connexion</router-link>
     </div>
   </div>
+
+  <div v-else class="container">
+  <div class="input-container">
+    <h1>Déconnexion</h1>
+    <button @click="userSignOut()" class="sign-out"> Déconnexion </button>
+    </div>
+  </div>
+
 </div>
 </template>
 
@@ -97,6 +118,10 @@ function isLoginView () {
       color: white;
       padding: 10px;
       margin: 0;
+    }
+    & .error {
+      color: red;
+      font-family: "bau-bold";
     }
     & .input-container {
       width: 80%;
@@ -135,7 +160,8 @@ function isLoginView () {
           color: $main-color;
         }
       }
-      & .link{
+
+      & .link {
         color: grey;
       }
     }

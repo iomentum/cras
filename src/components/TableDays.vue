@@ -21,11 +21,7 @@ const isAllDaysChecked = computed(():boolean => {
 });
 
 function isMainView () {
-  if(route.path == "/") {
-    return true;
-  } else {
-    return false;
-  }
+  return(route.path == "/")
 }
 </script>
 
@@ -61,6 +57,7 @@ function isMainView () {
 <style lang="scss">
 
 .table-of-days {
+  z-index: 3;
   display: flex;
   text-align: center;
   height: 90px;
