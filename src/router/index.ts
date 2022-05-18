@@ -1,7 +1,8 @@
 import { createWebHistory, createRouter } from "vue-router";
 import MainView from '@/views/MainView.vue';
 import PrintView from '@/views/PrintView.vue';
-import LogAndRegister from '@/components/LogAndRegister.vue';
+import Login from '@/views/Login.vue';
+import EditProfile from '@/components/EditProfile.vue';
 
 const routes = [
   {
@@ -15,14 +16,14 @@ const routes = [
     component: PrintView
   },
   {
-    path: "/register",
-    name: "Register",
-    component: LogAndRegister
-  },
-  {
     path: "/login",
     name: "Login",
-    component: LogAndRegister
+    component: Login
+  },
+  {
+    path: "/edit-profile",
+    name: "Profile",
+    component: EditProfile
   }
 ];
 

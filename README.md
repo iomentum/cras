@@ -1,7 +1,4 @@
-# TODO 
-
-- [ ] Faire le tableau des jours dynamiquement
-
+# TODO
 
 # Vue 3 + TypeScript + Vite
 

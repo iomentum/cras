@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import { userSignOut, userSignIn } from '@/firebaseauth/user';
-import { computed } from '@vue/reactivity';
+import { userSignOut } from '@/firebaseauth/user';
+import { useUserStore } from '@/stores/userStore';
 
-const router = useRouter()
+const userStore = useUserStore();
+const router = useRouter();
 const user = firebase.auth().currentUser;
-const isLoggedIn = ref(false)
+const isLoggedIn = ref(false);
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    isLoggedIn.value = true
-  } else {
-    isLoggedIn.value = false
-  }
-})
+
+
+firebase.auth().onAuthStateChanged((user) => isLoggedIn.value = !!user)
 
 const signOut = () => {
   userSignOut()
   router.push('/login')
+  userStore.resetUserStore()
 }
 </script>
 
@@ -33,16 +31,15 @@ const signOut = () => {
 
         <div class="dropdown-menu"></div>
           <div class="dropdown-menu-button">
-            <div>H</div>
+            <div>{{ userStore.getUpperFirstChar }}</div>
           </div>
 
           <div class="dropdown-menu-popper">
-            <button @click="signOut">Déconnexion</button>
+            <button class="dropdown-menu-popper-button" @click="signOut">Déconnexion</button>
+            <router-link class="dropdown-menu-popper-button" to="/edit-profile">Profil</router-link>
+            <router-link class="dropdown-menu-popper-button" to="/">Tableau</router-link>
           </div>
         </div>
-        <!--       <div v-else>
-        <div>Se connecter</div>
-        </div> -->
     </div>
     <img src="src\assets\IOmentum_Logo_White.png">
   </div>
@@ -81,11 +78,21 @@ const signOut = () => {
   overflow: hidden;
   transition: 100ms ;
   border: 1px solid $main-color;
-  border-radius: 5px;
   transition-delay: 150ms;
+  text-align: center;
   &:hover {
     height: 100px;
     border: 1px solid $main-color;
+  }
+  & .dropdown-menu-popper-button {
+    color: black;
+    text-decoration: none;
+    width: 100%;
+    font-family: "bau-regular", Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    background-color: #00000000;
+    border: none;
+    cursor: pointer;
   }
 }
 
@@ -103,16 +110,6 @@ const signOut = () => {
         font-size: 35px;
         color: white;
         min-width: 580px;
-      }
-    }
-    & .user-infos {
-      & button {
-        width: 100%;
-        font-family: "bau-regular", Arial, Helvetica, sans-serif;
-        font-size: 15px;
-        background-color: #00000000;
-        border: none;
-        cursor: pointer;
       }
     }
   }

@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { useDaysStore } from '@/stores/daysStore';
+import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
+import { ref } from 'vue'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 // eslint-disable-next-line no-undef
 const date = new Date();
 const store = useDaysStore();
+const userStore = useUserStore();
 const route = useRoute();
 const thisMonth = date.getMonth()+1;
+const isLoggedIn = ref(false)
 
 let thisMonthString = ""+thisMonth;
 if (thisMonthString.length == 1) {
@@ -26,16 +32,6 @@ function monthString () {
   return thisMonthString;
 }
 
-function changeUserame (event: Event) {
-  const target = event.target as HTMLInputElement;
-  store.changeUsername(target.value);
-}
-
-function changeCustomer (event: Event) {
-  const target = event.target as HTMLInputElement;
-  store.changeCustomer(target.value);
-}
-
 function isMainView () {
   if(route.name == 'Home') {
     return true;
@@ -43,6 +39,15 @@ function isMainView () {
     return false;
   }
 }
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    isLoggedIn.value = true
+  } else {
+    isLoggedIn.value = false
+  }
+})
+
 </script>
 
 <template>
@@ -50,25 +55,23 @@ function isMainView () {
     <div>
       <p>NOM DE L'INTERVENANT</p>
       <input
-        v-if="isMainView()"
+        v-if="isMainView() && !isLoggedIn"
         type="text"
-        :value="store.username"
-        @change="changeUserame"
+        :value="userStore.getUserFullName"
       >
       <p v-else>
-        {{ store.username }}
+        {{ userStore.getUserFullName }}
       </p>
     </div>
     <div>
       <p>NOM DU CLIENT</p>
       <input
-        v-if="isMainView()"
+        v-if="isMainView() && !isLoggedIn"
         type="text"
-        :value="store.customer"
-        @change="changeCustomer"
+        :value="userStore.user.customer"
       >
       <p v-else>
-        {{ store.customer }}
+        {{ userStore.user.customer }}
       </p>
     </div>
     <div>

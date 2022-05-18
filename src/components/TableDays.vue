@@ -21,7 +21,7 @@ const isAllDaysChecked = computed(():boolean => {
 });
 
 function isMainView () {
-  return(route.path == "/")
+  return route.path == "/"
 }
 </script>
 

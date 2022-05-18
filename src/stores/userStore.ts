@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia';
 import firebase from 'firebase/compat/app';
+import { ref } from 'vue'
 import { getFirestore, setDoc, getDoc, doc } from 'firebase/firestore';
-
+import 'firebase/compat/auth';
+import { userSignOut, userSignIn, userRegistration } from '@/firebaseauth/user';
+import { User } from '@/models/user';
 
 // Il faut mettre ça ds un .env
 const firebaseConfig = {
@@ -14,45 +17,66 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+
+const user = firebase.auth().currentUser;
 const db = getFirestore(app);
+const isLoggedIn = ref(false);
+let userId = "";
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    isLoggedIn.value = true
+    userId = user.uid
+  } else {
+    isLoggedIn.value = false
+  }
+})
 
 export const useUserStore = defineStore("user", {
   state: () :{
-    firstName: string,
-    lastName:string,
-    customer: string,
-    email: string,
-    uid: string
+    user: User
   } => {
     return {
-      firstName: "",
-      lastName:"",
-      customer: "",
-      email: "",
-      uid: ""
+      user: new User("","","","",""),
     };
   },
   actions: {
     setUserInfos(firstName:string, lastName:string, customer: string, email:string, uid:string) {
-      this.firstName = firstName
-      this.lastName = lastName
-      this.email = email
-      this.customer = customer
-      this.uid = uid
+      this.user.setInfos(firstName, lastName, customer, email, uid)
     },
-    addUser() {
-      setDoc(doc(db, "users", this.uid), {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        customer: this.customer,
-        uid: this.uid
+    resetUserStore() {
+      this.user.setInfos("","","","","")
+    },
+    setDatabaseDoc() {
+      setDoc(doc(db, "users", this.user.uid), {
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        email: this.user.email,
+        customer: this.user.customer,
+        uid: this.user.uid
       })
-    }
+    },
+    async getUserFromDB() {
+      const docRef = doc(db, "users", userId)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        this.user = new User(
+          docSnap.data().firstName,
+          docSnap.data().lastName,
+          docSnap.data().customer,
+          docSnap.data().email,
+          docSnap.data().uid)
+      }
+    },
   },
   getters: {
     getUserFullName() :string {
-      return this.firstName
+      return `${this.user.firstName} ${this.user.lastName}`
+    },
+    getUpperFirstChar() :string {
+      return this.user.lastName.charAt(0).toUpperCase()
     }
   }
 })

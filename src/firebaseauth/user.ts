@@ -35,11 +35,11 @@ const ERROR_MESSAGES: ERROR_CODES = {
 
 export const userRegistration = async (email:string, password:string) => {
   try {
-    const test = await firebase
+    const user = await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password);
     return {
-      user: test,
+      user: user,
       error: false,
     }
   } catch (e) {
@@ -53,11 +53,11 @@ export const userRegistration = async (email:string, password:string) => {
 
 export const userSignIn = async (email:string, password:string) => {
   try {
-    const test = await firebase
+    const user = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
     return {
-      user: test,
+      user: user,
       error: false,
     }
   } catch (e) {
