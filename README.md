@@ -1,7 +1,7 @@
 # TODO 
 
 - [ ] Faire le tableau des jours dynamiquement
-
+- [ ] Ajouter la date préremplie dans le carré intervenant
 
 # Vue 3 + TypeScript + Vite
 
