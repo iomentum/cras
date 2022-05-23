@@ -1,4 +1,3 @@
-# TODO
 
 # Vue 3 + TypeScript + Vite
 

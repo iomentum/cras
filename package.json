@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest",
     "dev": "vite",
+    "start": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint:markup": "vue-tsc --noEmit",
