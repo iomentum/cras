@@ -14,24 +14,24 @@
       <td>Montant</td>
     </tr>
     <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
     </tr>
     <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
     </tr>
     <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
     </tr>
     <tr>
-      <td><input></td>
-      <td><input></td>
-      <td><input></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
+      <td><input type="text"></td>
     </tr>
     <tr>
       <td

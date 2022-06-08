@@ -2,7 +2,7 @@
 import { useDaysStore } from '@/stores/daysStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 
@@ -13,18 +13,15 @@ const userStore = useUserStore();
 const route = useRoute();
 const thisMonth = date.getMonth()+1;
 const isLoggedIn = ref(false)
+const datetest = ref(`${store.getDateString}`)
 
-let thisMonthString = ""+thisMonth;
-if (thisMonthString.length == 1) {
-  thisMonthString = "0"+thisMonthString;
-}
-
-function changeMonth (event:Event) {
+const changeMonth = (event:Event) => {
   const target = event.target as HTMLInputElement;
+  datetest.value = target.value
   store.addDays(new Date(target.value));
 }
 
-function monthString () {
+const monthString = () => {
   let thisMonthString = ""+thisMonth;
   if (thisMonthString.length == 1) {
     thisMonthString = "0"+thisMonthString;
@@ -32,21 +29,22 @@ function monthString () {
   return thisMonthString;
 }
 
-function isMainView () {
-  if(route.name == 'Home') {
-    return true;
-  } else {
-    return false;
-  }
-}
+const isMainView = () => route.path == "/"
 
 firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    isLoggedIn.value = true
-  } else {
-    isLoggedIn.value = false
-  }
+  isLoggedIn.value = !!user
 })
+
+const changeInputs = (e:Event) => {
+  const target = e.target as HTMLInputElement;
+  if (target.name == 'username') {
+    userStore.setFirstName(target.value)
+  }
+  if (target.name == 'customer') {
+    userStore.setCustomer(target.value)
+  }
+
+}
 
 </script>
 
@@ -57,7 +55,9 @@ firebase.auth().onAuthStateChanged(function(user) {
       <input
         v-if="isMainView() && !isLoggedIn"
         type="text"
-        :value="userStore.getUserFullName"
+        name="username"
+        :value="userStore.user.firstName"
+        @change="changeInputs"
       >
       <p v-else>
         {{ userStore.getUserFullName }}
@@ -68,7 +68,9 @@ firebase.auth().onAuthStateChanged(function(user) {
       <input
         v-if="isMainView() && !isLoggedIn"
         type="text"
+        name="customer"
         :value="userStore.user.customer"
+        @change="changeInputs"
       >
       <p v-else>
         {{ userStore.user.customer }}
@@ -79,13 +81,13 @@ firebase.auth().onAuthStateChanged(function(user) {
       <input
         v-if="isMainView()"
         type="month"
-        :value="`${date.getFullYear()}-${monthString()}`"
+        :value="datetest"
         :min="`${date.getFullYear()-10}-${monthString()}`"
         :max="`${date.getFullYear()+3}-${monthString()}`"
         @change="changeMonth"
       >
       <p v-else>
-        {{ `${monthString()}-${date.getFullYear()}` }}
+        {{ `${store.getDateString}` }}
       </p>
     </div>
   </div>

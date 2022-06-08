@@ -5,10 +5,14 @@ import { generateDays } from '@/utils/generateDays';
 export const useDaysStore = defineStore("days", {
   state: () :{
     arrayOfDays: Day[] | [],
-    loading: boolean
+    signed: boolean,
+    dateOfSignature: Date,
+    loading: boolean,
   } => {
     return {
       arrayOfDays: [],
+      dateOfSignature: new Date(0),
+      signed: false,
       loading: false
     };
   },
@@ -16,6 +20,8 @@ export const useDaysStore = defineStore("days", {
     async addDays (date?:Date) {
       this.arrayOfDays= [];
       this.loading = true;
+      this.signed = false;
+      this.dateOfSignature = new Date(0);
 
       if (date) {
         this.arrayOfDays = await generateDays(date);
@@ -36,6 +42,9 @@ export const useDaysStore = defineStore("days", {
         });
       }
     },
+    setArrayOfDays (array:Day[]) {
+      this.arrayOfDays = array
+    },
     toggleHalfDay (day:WorkedDay, checked:boolean, whichHalfDay:string) {
       switch(whichHalfDay) {
         case "morning":
@@ -48,6 +57,9 @@ export const useDaysStore = defineStore("days", {
           break;
       }
     },
+    resetDaysStore() {
+      this.arrayOfDays = []
+    }
  },
 
   getters: {
@@ -74,6 +86,24 @@ export const useDaysStore = defineStore("days", {
         }
       });
       return workedDayCounter;
+    },
+    isAllDaysChecked: (state) => {
+      return state.arrayOfDays.every(day => {if(day instanceof WorkedDay)day.morning && day.afternoon});
+    },
+    getDateString: (state) => {
+      if (!state.arrayOfDays[0]) return null
+
+      const month = `${state.arrayOfDays[0].date.getMonth()+1}`;
+      const year = state.arrayOfDays[0].date.getFullYear();
+
+      const date = `${year}-${month.length == 1 ? `0${month}` : month}`
+      return date
+    },
+    getSignatureDate: (state) => {
+      const day = state.dateOfSignature.getDate();
+      const month = state.dateOfSignature.getMonth()+1;
+      const year = state.dateOfSignature.getFullYear();
+      return `${day}/${month}/${year}`
     }
   }
 });

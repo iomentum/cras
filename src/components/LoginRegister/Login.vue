@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
 import firebase from 'firebase/compat/app';
-import { userSignOut, userSignIn, userRegistration } from '@/firebaseauth/user';
+import { userSignOut, userSignIn, userRegistration } from '@/firebaseutils/auth';
 
 const router = useRouter();
 const route = useRoute();

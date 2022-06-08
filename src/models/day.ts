@@ -22,10 +22,10 @@ export class WorkedDay extends Day {
   morning: boolean;
   afternoon: boolean;
 
-  constructor (date: Date) {
+  constructor (date: Date, morning: boolean, afternoon: boolean) {
     super(date);
-    this.morning = false;
-    this.afternoon = false;
+    this.morning = morning;
+    this.afternoon = afternoon;
   }
 
   addMorning (): void {

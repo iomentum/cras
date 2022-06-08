@@ -1,8 +1,33 @@
+<script setup lang="ts">
+import { ref } from '@vue/reactivity';
+import { useUserStore } from '@/stores/userStore';
+import { useDaysStore } from '@/stores/daysStore';
+import { signCra } from '@/firebaseutils/firestore'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/storage';
+
+
+const store = useUserStore();
+const daysStore = useDaysStore();
+const signature = store.user.signatureURL
+const date = `${daysStore.getSignatureDate}`
+const isLoggedIn = ref(false)
+
+firebase.auth().onAuthStateChanged(function(user) {
+ isLoggedIn.value = !!user
+})
+
+</script>
+
 <template>
   <div class="signatures">
-    <div>Date et signature de l'intervenant</div>
+    <div>
+      <p>Date et signature de l'intervenant</p>
+      <button v-if="!daysStore.signed && isLoggedIn" @click="signCra()">Signer</button>
+      <p v-if="daysStore.signed" class="date">{{ date }}</p>
+      <img v-if="daysStore.signed" :src="signature">
+    </div>
     <div>Date et signature du responsable client</div>
-    <div>Date et signature du responsble IOMentum</div>
   </div>
 </template>
 
@@ -10,26 +35,30 @@
 .signatures {
   display: flex;
   flex-direction: row;
-  margin: auto;
-  height: 120px;
-  width: 50%;
-
+  margin: 0 auto;
+  height: 140px;
+  width: 33%;
+  & .date{
+    color: black;
+  }
   & div {
     border: 1px solid $main-color;
-    width: 300px;
+    width: 50%;
     margin-top: 20px;
     padding: 8px;
     text-align: center;
     font-size: 10px;
     font-family: "Bau-Bold", Arial, Helvetica, sans-serif;
     color: #790053;
-
+    & p {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    & img {
+      height: 85%;
+    }
     &:nth-of-type(1) {
       margin-right: 5px;
-    }
-
-    &:nth-of-type(3) {
-      margin-left: 5px;
     }
   }
 }

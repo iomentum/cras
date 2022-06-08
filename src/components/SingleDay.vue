@@ -9,7 +9,7 @@ const store = useDaysStore();
 // eslint-disable-next-line no-undef
 const props = defineProps<{ day: WorkedDay | Day | Holiday }>();
 
-function toggleHalfDay (evt: Event) {
+const toggleHalfDay = (evt: Event) => {
   let target = evt.target as HTMLInputElement;
   if(props.day instanceof WorkedDay) {
     store.toggleHalfDay(props.day, target.checked, target.name);

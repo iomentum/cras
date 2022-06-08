@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
+import { computed, ref } from '@vue/reactivity';
 import { Day, WorkedDay } from '@/models/day';
 import SingleDay from '@/components/SingleDay.vue';
 import { useDaysStore } from '@/stores/daysStore';
@@ -9,34 +9,35 @@ const route = useRoute();
 const store = useDaysStore();
 const daysList = computed(():Day[] | [] => store.getDays);
 
-function toggleAllDays (evt: Event) {
+const toggleAllDays = (evt: Event) => {
   const target = evt.target as HTMLInputElement;
   store.toggleAllDays(target.checked);
-}
+};
 
 const isAllDaysChecked = computed(():boolean => {
-  return store.getArrayOfDays
-    .filter(day => day instanceof WorkedDay)
-    .every(day => {if(day instanceof WorkedDay)day.morning && day.afternoon});
+  const filteredDays: WorkedDay[] = daysList.value.filter((day):Boolean => day instanceof WorkedDay);
+  const areAllDaysWorked = filteredDays.every(day => day.morning && day.afternoon);
+  return areAllDaysWorked
 });
 
-function isMainView () {
-  return route.path == "/"
-}
+const isMainView = () => route.path == "/"
+
 </script>
 
 <template>
   <div class="table-of-days">
     <div class="left-column">
       <div>Jours</div>
-      <div>
+      <div v-if="isMainView()">
         Jours travaillés
         <input
-          v-if="isMainView()"
           type="checkbox"
-          :checked="isAllDaysChecked"
+          v-model="isAllDaysChecked"
           @change="toggleAllDays"
         >
+      </div>
+      <div v-else>
+        <p>Jours travaillés</p>
       </div>
     </div>
 
@@ -90,6 +91,7 @@ function isMainView () {
       height: 40%;
       color: $main-color;
     }
+
   }
 
   & .right-column {

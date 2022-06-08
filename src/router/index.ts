@@ -3,6 +3,7 @@ import MainView from '@/views/MainView.vue';
 import PrintView from '@/views/PrintView.vue';
 import Login from '@/views/Login.vue';
 import EditProfile from '@/components/EditProfile.vue';
+import UsersCras from '@/components/UsersCras.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/edit-profile",
     name: "Profile",
     component: EditProfile
+  },
+  {
+    path: "/cras",
+    name: "My cras",
+    component: UsersCras
   }
 ];
 

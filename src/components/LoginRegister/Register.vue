@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/userStore';
 import firebase from 'firebase/compat/app';
-import { userRegistration } from '@/firebaseauth/user';
+import { userRegistration } from '@/firebaseutils/auth';
 
 const router = useRouter();
 const route = useRoute();
@@ -13,8 +13,6 @@ const password = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const customer = ref('');
-const login = ref(false);
-
 
 const user = firebase.auth().currentUser;
 
@@ -31,7 +29,8 @@ const register = async () => {
 
     store.setUserInfos(
       firstName.value,
-      lastName.value,customer.value,
+      lastName.value,
+      customer.value,
       email.value,
       uid || ''
     )

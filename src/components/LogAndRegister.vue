@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore';
-import { userSignOut } from '@/firebaseauth/user';
+import { userSignOut } from '@/firebaseutils/auth';
 import Login from '@/components/LoginRegister/Login.vue';
 import Register from '@/components//LoginRegister/Register.vue';
 

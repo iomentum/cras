@@ -9,7 +9,6 @@ onMounted(() => {
   firebase.auth().onAuthStateChanged((user) => isLoggedIn.value = !!user)
 })
 
-
 </script>
 
 <template>

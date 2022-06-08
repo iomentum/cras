@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/userStore';
 import firebase from 'firebase/compat/app';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import 'firebase/compat/storage';
 
 const store = useUserStore();
 const user = firebase.auth().currentUser;
@@ -13,18 +14,36 @@ const userEmail = store.user.email
 const userId = store.user.uid
 
 firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    isLoggedIn.value = true
-  } else {
-    isLoggedIn.value = false
-  }
+ isLoggedIn.value = !!user
 })
 
-function changeUserInfos(){
+const changeUserInfos = () => {
   store.setUserInfos(firstName.value,lastName.value,customer.value,userEmail,userId)
   store.setDatabaseDoc()
 }
 
+const uploadSignature = (event:Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files
+  if (file && file[0]) {
+    const fileFolder = user?.uid;
+    const storageRef = firebase.storage().ref(`${fileFolder}/signature`);
+    storageRef.put(file[0])
+    storageRef.getDownloadURL().then((url) => {
+    store.setSignatureURL(url)
+    })
+  }
+}
+
+const deleteSignature = () => {
+  const fileFolder = user?.uid;
+  firebase.storage().ref(`${fileFolder}/signature`).delete()
+  store.setSignatureURL('')
+}
+
+const isSignatureEmpty = () => {
+  return store.user.signatureURL == ''
+}
 </script>
 
 <template>
@@ -36,7 +55,11 @@ function changeUserInfos(){
   <input type="text" name="Prenom" :placeholder="store.user.lastName" v-model="lastName">
   <label for="Client">Client</label>
   <input type="text" name="Client" :placeholder="store.user.customer" v-model="customer">
-  <button @click="changeUserInfos()">Save</button>
+  <label for="Client">Signature</label>
+  <img  :src="store.user.signatureURL" class="signature">
+  <button v-if="!isSignatureEmpty()" @click="deleteSignature">Supprimer</button>
+  <input type="file" v-if="isSignatureEmpty()" @change="uploadSignature" name="signature" accept="image/*">
+  <button @click="changeUserInfos">Save</button>
 </div>
 </template>
 
@@ -84,6 +107,11 @@ h1 {
     transition: .2s ease-in;
     cursor: pointer;
     text-decoration: none;
+  }
+  & .signature {
+    margin: 0 auto;
+    height: auto;
+    width: 150px;
   }
 }
 </style>
