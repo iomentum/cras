@@ -3,21 +3,21 @@ import { useDaysStore } from '@/stores/daysStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
 import { ref, computed } from 'vue'
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
 
-// eslint-disable-next-line no-undef
 const date = new Date();
 const store = useDaysStore();
 const userStore = useUserStore();
 const route = useRoute();
 const thisMonth = date.getMonth()+1;
-const isLoggedIn = ref(false)
-const datetest = ref(`${store.getDateString}`)
+const yearmonth = ref(store.getDateString)
+
+const isLoggedIn = computed(() => {
+  return userStore.user.isLogged
+})
 
 const changeMonth = (event:Event) => {
   const target = event.target as HTMLInputElement;
-  datetest.value = target.value
+  yearmonth.value = target.value
   store.addDays(new Date(target.value));
 }
 
@@ -29,10 +29,8 @@ const monthString = () => {
   return thisMonthString;
 }
 
-const isMainView = () => route.path == "/"
-
-firebase.auth().onAuthStateChanged(function(user) {
-  isLoggedIn.value = !!user
+const isMainView = computed(() => {
+  return route.path == "/"
 })
 
 const changeInputs = (e:Event) => {
@@ -43,7 +41,6 @@ const changeInputs = (e:Event) => {
   if (target.name == 'customer') {
     userStore.setCustomer(target.value)
   }
-
 }
 
 </script>
@@ -53,7 +50,7 @@ const changeInputs = (e:Event) => {
     <div>
       <p>NOM DE L'INTERVENANT</p>
       <input
-        v-if="isMainView() && !isLoggedIn"
+        v-if="isMainView && !isLoggedIn"
         type="text"
         name="username"
         :value="userStore.user.firstName"
@@ -66,7 +63,7 @@ const changeInputs = (e:Event) => {
     <div>
       <p>NOM DU CLIENT</p>
       <input
-        v-if="isMainView() && !isLoggedIn"
+        v-if="isMainView && !isLoggedIn"
         type="text"
         name="customer"
         :value="userStore.user.customer"
@@ -79,9 +76,9 @@ const changeInputs = (e:Event) => {
     <div>
       <p>MOIS/ANNÉE</p>
       <input
-        v-if="isMainView()"
+        v-if="isMainView"
         type="month"
-        :value="datetest"
+        :value="yearmonth"
         :min="`${date.getFullYear()-10}-${monthString()}`"
         :max="`${date.getFullYear()+3}-${monthString()}`"
         @change="changeMonth"

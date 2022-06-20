@@ -3,7 +3,7 @@ import { Day, WorkedDay, Holiday } from './day'
 const date = new Date(2022,4,5)
 
 const day = new Day(date)
-const workedDay = new WorkedDay(date)
+const workedDay = new WorkedDay(date, false, false)
 const holiday = new Holiday(date)
 
 describe('Day,WorkedDay,Holiday class tests',() => {

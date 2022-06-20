@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import TableDays from '@/components/TableDays.vue';
-import UserInputs from '@/components/UserInputs.vue';
-import TheFooter from '@/components/TheFooter.vue';
+import TableDays from '@/components/Cra/TableDays.vue';
+import UserInputs from '@/components/User/UserInputs.vue';
+import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
 import CostsAndComments from '@/components/CostsComments/CostsAndComments.vue';
 import 'firebase/compat/auth';
 import { useDaysStore } from '@/stores/daysStore';
-import { sendCraToDB } from '@/firebaseutils/firestore';
+import { createOrUpdateCraDB } from '@/expressutils/cras'
 
-const dayStore = useDaysStore();
+const daysStore = useDaysStore();
 
 </script>
 
 <template>
   <UserInputs />
-  <TableDays v-if="!dayStore.signed"/>
-  <CostsAndComments v-if="!dayStore.signed"/>
+  <TableDays v-if="!daysStore.signed"/>
+  <CostsAndComments v-if="!daysStore.signed"/>
   <div class="button">
-    <router-link v-if="!dayStore.signed" @click="sendCraToDB()" class="link" to="/Print">
+    <router-link v-if="!daysStore.signed" @click="createOrUpdateCraDB" class="link" to="/Print">
       Valider
     </router-link>
   </div>
-  <div v-if="dayStore.signed">
+  <div v-if="daysStore.signed">
     <h1 class="warn">Ce cra est déjà signé, vous ne pouvez plus le modifier</h1>
     <div class="button">
       <router-link class="link" to="/Print">Voir le cra</router-link>

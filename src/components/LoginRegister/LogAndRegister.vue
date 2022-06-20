@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore';
-import { userSignOut } from '@/firebaseutils/auth';
 import Login from '@/components/LoginRegister/Login.vue';
 import Register from '@/components//LoginRegister/Register.vue';
 
-const props = defineProps<{ userLoggedIn: Boolean }>();
 const store = useUserStore();
+// const props = defineProps<{ userLoggedIn: Boolean }>();
 const login = ref(false);
 
 const signOut = () => {
-  userSignOut()
   store.resetUserStore()
 }
 </script>
 
 <template>
-<div class="form-container" v-if="!props.userLoggedIn">
+<div class="form-container" v-if="!store.user.isLogged">
   <div class="form">
     <div class="container" v-if="!login">
       <Login />

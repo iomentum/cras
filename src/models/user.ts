@@ -4,6 +4,7 @@ export class User {
   customer: string;
   email: string;
   uid: string;
+  isLogged: boolean;
   signatureURL: string;
 
   constructor (firstName:string,lastName:string,customer: string,email: string,uid: string) {
@@ -12,7 +13,12 @@ export class User {
     this.customer = customer;
     this.email = email;
     this.uid = uid;
+    this.isLogged = false;
     this.signatureURL = '';
+  }
+
+  setLogStatus (logged: boolean) {
+    this.isLogged = logged;
   }
 
   setInfos (firstName:string, lastName:string, customer: string, email:string, uid:string): void {
@@ -27,8 +33,12 @@ export class User {
     this.signatureURL = url;
   }
 
-  setFirstName(username:string): void {
-    this.firstName = username;
+  setFirstName(firstName:string): void {
+    this.firstName = firstName;
+  }
+
+  setLastName(lastName:string): void {
+    this.lastName = lastName;
   }
 
   setCustomer(customer:string): void {

@@ -1,46 +1,32 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
-import firebase from 'firebase/compat/app';
-import { userRegistration } from '@/firebaseutils/auth';
+import { signUp } from '@/expressutils/auth';
 
 const router = useRouter();
-const route = useRoute();
-
 const email = ref('');
 const password = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const customer = ref('');
 
-const user = firebase.auth().currentUser;
+const userStore = useUserStore();
+const errorMsg = computed(() => {
+  return userStore.errorMsg
+})
 
-const store = useUserStore();
-
-const errorMsg = ref('')
 const register = async () => {
-  const {
-    user, error
-  } = await userRegistration(email.value, password.value);
-
-  if (user !== null) {
-    const uid = firebase.auth().currentUser?.uid
-
-    store.setUserInfos(
-      firstName.value,
-      lastName.value,
-      customer.value,
-      email.value,
-      uid || ''
-    )
-
-    store.setDatabaseDoc()
-    router.push('/')
-    return
-  }
-  errorMsg.value = error
+  await signUp(
+    email.value,
+    password.value,
+    firstName.value,
+    lastName.value,
+    customer.value
+  );
+  if(userStore.user.isLogged)router.push('/')
 }
+
 </script>
 
 <template>

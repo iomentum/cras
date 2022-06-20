@@ -2,8 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 import MainView from '@/views/MainView.vue';
 import PrintView from '@/views/PrintView.vue';
 import Login from '@/views/Login.vue';
-import EditProfile from '@/components/EditProfile.vue';
-import UsersCras from '@/components/UsersCras.vue';
+import EditProfile from '@/components/User/EditProfile.vue';
+import UsersCras from '@/components/Cra/UsersCras.vue';
 
 const routes = [
   {

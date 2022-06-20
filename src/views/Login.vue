@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import LogAndRegister from "@/components/LogAndRegister.vue";
-import firebase from 'firebase/compat/app';
-import { ref, onMounted } from 'vue'
+import LogAndRegister from "@/components/LoginRegister/LogAndRegister.vue";
+import { ref } from 'vue'
 
 const isLoggedIn = ref(false);
-
-onMounted(() => {
-  firebase.auth().onAuthStateChanged((user) => isLoggedIn.value = !!user)
-})
 
 </script>
 

@@ -14,24 +14,11 @@
       <td>Montant</td>
     </tr>
     <tr>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-    </tr>
-    <tr>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-    </tr>
-    <tr>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-    </tr>
-    <tr>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
-      <td><input type="text"></td>
+      <td
+        class="titles"
+        colspan="3"
+      >
+        Ajouter des frais</td>
     </tr>
     <tr>
       <td

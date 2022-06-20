@@ -1,26 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, onUpdated } from 'vue';
-import TheHeader from '@/components/TheHeader.vue';
+import TheHeader from '@/components/HeaderFooter/TheHeader.vue';
 import { useDaysStore } from '@/stores/daysStore';
 import { useUserStore } from '@/stores/userStore';
 import 'firebase/compat/storage';
-import firebase from 'firebase/compat/app';
-
-const store = useDaysStore();
-const userStore = useUserStore();
-store.addDays();
-
-
-
-onUpdated(() => {
-  console.log('ici');
-    const user = firebase.auth().currentUser;
-    if(user) {
-      userStore.getUserFromDB()
-    }
-  }
-)
-
 
 
 //Checkif user

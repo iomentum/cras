@@ -1,17 +1,34 @@
 import { defineStore } from 'pinia';
-import { Day, WorkedDay } from '@/models/day';
+import { Day, WorkedDay, Holiday } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
+import { useUserStore } from './userStore';
+import firebase from 'firebase/compat/app';
+import { getFirestore, getDoc, doc } from 'firebase/firestore';
+import { getCra, isCraExist } from '@/expressutils/cras';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCYbjqSs55f4e8xqt9leTeGZzBR3AuD68k",
+  authDomain: "cra-auth-c57c2.firebaseapp.com",
+  projectId: "cra-auth-c57c2",
+  storageBucket: "cra-auth-c57c2.appspot.com",
+  messagingSenderId: "75056807790",
+  appId: "1:75056807790:web:2b64a9a613172294200b7f"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 
 export const useDaysStore = defineStore("days", {
   state: () :{
     arrayOfDays: Day[] | [],
     signed: boolean,
-    dateOfSignature: Date,
+    dateOfSignature: string,
     loading: boolean,
   } => {
     return {
       arrayOfDays: [],
-      dateOfSignature: new Date(0),
+      dateOfSignature: '',
       signed: false,
       loading: false
     };
@@ -21,10 +38,15 @@ export const useDaysStore = defineStore("days", {
       this.arrayOfDays= [];
       this.loading = true;
       this.signed = false;
-      this.dateOfSignature = new Date(0);
+      this.dateOfSignature = '';
 
       if (date) {
-        this.arrayOfDays = await generateDays(date);
+      const month = `${date.getMonth()+1}`;
+      const year = date.getFullYear();
+      const yearmonth = `${year}-${month.length == 1 ? `0${month}` : month}`
+
+      await isCraExist(yearmonth) ? getCra(yearmonth) : this.arrayOfDays = await generateDays(date);
+
       } else {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
@@ -100,10 +122,7 @@ export const useDaysStore = defineStore("days", {
       return date
     },
     getSignatureDate: (state) => {
-      const day = state.dateOfSignature.getDate();
-      const month = state.dateOfSignature.getMonth()+1;
-      const year = state.dateOfSignature.getFullYear();
-      return `${day}/${month}/${year}`
+      return state.dateOfSignature
     }
   }
 });

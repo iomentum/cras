@@ -20,7 +20,7 @@ describe('Login unit test', () => {
   });
 
 
-  test('renders correctly', () => {
+  it('renders correctly', () => {
     expect(wrapper.element).toMatchSnapshot()
   })
 });

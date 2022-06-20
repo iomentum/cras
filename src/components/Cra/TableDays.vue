@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from '@vue/reactivity';
+import { computed } from '@vue/reactivity';
 import { Day, WorkedDay } from '@/models/day';
-import SingleDay from '@/components/SingleDay.vue';
+import SingleDay from '@/components/Cra/SingleDay.vue';
 import { useDaysStore } from '@/stores/daysStore';
 import { useRoute } from 'vue-router';
 
@@ -20,7 +20,10 @@ const isAllDaysChecked = computed(():boolean => {
   return areAllDaysWorked
 });
 
-const isMainView = () => route.path == "/"
+
+const isMainView = computed(() => {
+  return route.path == "/"
+})
 
 </script>
 
@@ -28,7 +31,7 @@ const isMainView = () => route.path == "/"
   <div class="table-of-days">
     <div class="left-column">
       <div>Jours</div>
-      <div v-if="isMainView()">
+      <div v-if="isMainView">
         Jours travaillés
         <input
           type="checkbox"

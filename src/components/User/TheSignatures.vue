@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from '@vue/reactivity';
+import { computed, ref } from '@vue/reactivity';
 import { useUserStore } from '@/stores/userStore';
 import { useDaysStore } from '@/stores/daysStore';
-import { signCra } from '@/firebaseutils/firestore'
+import { signCra } from '@/expressutils/cras'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 
@@ -10,12 +10,17 @@ import 'firebase/compat/storage';
 const store = useUserStore();
 const daysStore = useDaysStore();
 const signature = store.user.signatureURL
-const date = `${daysStore.getSignatureDate}`
-const isLoggedIn = ref(false)
-
-firebase.auth().onAuthStateChanged(function(user) {
- isLoggedIn.value = !!user
+const signatureDate = computed(() => {
+  return `${daysStore.getSignatureDate}`
 })
+
+const isLoggedIn = computed(() => {
+  return store.user.isLogged
+})
+
+const sign = async () => {
+  await signCra()
+}
 
 </script>
 
@@ -23,8 +28,8 @@ firebase.auth().onAuthStateChanged(function(user) {
   <div class="signatures">
     <div>
       <p>Date et signature de l'intervenant</p>
-      <button v-if="!daysStore.signed && isLoggedIn" @click="signCra()">Signer</button>
-      <p v-if="daysStore.signed" class="date">{{ date }}</p>
+      <button v-if="!daysStore.signed && isLoggedIn" @click="sign()">Signer</button>
+      <p v-if="daysStore.signed" class="date">{{ signatureDate }}</p>
       <img v-if="daysStore.signed" :src="signature">
     </div>
     <div>Date et signature du responsable client</div>

@@ -1,28 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import { userSignOut } from '@/firebaseutils/auth';
 import { useUserStore } from '@/stores/userStore';
 import { useDaysStore } from '@/stores/daysStore';
 
 const userStore = useUserStore();
 const daysStore = useDaysStore();
 const router = useRouter();
-const user = firebase.auth().currentUser;
-const isLoggedIn = ref(false);
 
-
-
-firebase.auth().onAuthStateChanged((user) => isLoggedIn.value = !!user)
+const isLoggedIn = computed(() =>{
+  return userStore.user.isLogged
+});
 
 const signOut = () => {
-  userSignOut()
   router.push('/login');
   userStore.resetUserStore();
   daysStore.addDays();
-}
+};
 </script>
 
 

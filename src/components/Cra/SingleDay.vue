@@ -2,6 +2,7 @@
 import { Day, WorkedDay, Holiday } from '@/models/day';
 import { useDaysStore } from '@/stores/daysStore';
 import { useRoute } from 'vue-router';
+import { computed } from '@vue/reactivity';
 
 const route = useRoute();
 const store = useDaysStore();
@@ -16,7 +17,9 @@ const toggleHalfDay = (evt: Event) => {
   }
 }
 
-const isMainView = route.path == "/";
+const isMainView = computed(() => {
+  return route.path == "/"
+})
 
 </script>
 
