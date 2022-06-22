@@ -61,7 +61,7 @@ const signOut = () => {
     margin-left: 11px;
   }
   &:hover + .dropdown-menu-popper{
-    height: 100px;
+    height: 90px;
     border: 1px solid $main-color;
   }
 }
@@ -79,7 +79,7 @@ const signOut = () => {
   transition-delay: 150ms;
   text-align: center;
   &:hover {
-    height: 100px;
+    height: 90px;
     border: 1px solid $main-color;
   }
   & .dropdown-menu-popper-button {

@@ -3,9 +3,8 @@ import TableDays from '@/components/Cra/TableDays.vue';
 import UserInputs from '@/components/User/UserInputs.vue';
 import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
 import CostsAndComments from '@/components/CostsComments/CostsAndComments.vue';
-import 'firebase/compat/auth';
 import { useDaysStore } from '@/stores/daysStore';
-import { createOrUpdateCraDB } from '@/expressutils/cras'
+import { createOrUpdateCraDB } from '@/services/cras'
 
 const daysStore = useDaysStore();
 

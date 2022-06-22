@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from '@vue/reactivity';
+import { computed } from '@vue/reactivity';
 import { useUserStore } from '@/stores/userStore';
 import { useDaysStore } from '@/stores/daysStore';
-import { signCra } from '@/expressutils/cras'
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/storage';
-
+import { signCra } from '@/services/cras'
 
 const store = useUserStore();
 const daysStore = useDaysStore();
 const signature = store.user.signatureURL
+
 const signatureDate = computed(() => {
   return `${daysStore.getSignatureDate}`
 })

@@ -17,12 +17,11 @@ const toggleAllDays = (evt: Event) => {
 const isAllDaysChecked = computed(():boolean => {
   const filteredDays: WorkedDay[] = daysList.value.filter((day):Boolean => day instanceof WorkedDay);
   const areAllDaysWorked = filteredDays.every(day => day.morning && day.afternoon);
-  return areAllDaysWorked
+  return areAllDaysWorked;
 });
 
-
 const isMainView = computed(() => {
-  return route.path == "/"
+  return route.path == "/";
 })
 
 </script>

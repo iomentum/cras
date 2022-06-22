@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import router from '@/router';
-import { getCra } from '@/expressutils/cras';
+import { getCra } from '@/services/cras';
 
 const props = defineProps<{ month: string, signed: boolean }>();
+const date = new Date(props.month);
+const year = date.getFullYear();
+const test = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
 
 const getThisCra = async () => {
   await getCra(props.month);
-  props.signed ? router.push('/Print'):router.push('/');
+  props.signed ? router.push('/print') : router.push('/');
 }
 
 </script>
@@ -14,7 +17,7 @@ const getThisCra = async () => {
 <template>
 <div class="cras-button-container">
   <div class="button" :id="month">
-    <div class="month">{{ month }}</div>
+    <div class="month">{{ test }}</div>
     <div class="status" v-if="!signed">Brouillon <button @click="getThisCra()">Editer</button></div>
     <div class="status" v-if="signed">Signé <button @click="getThisCra()">Voir le cra</button></div>
   </div>
@@ -29,11 +32,12 @@ const getThisCra = async () => {
     flex-direction: row;
     margin: 0 auto;
     border: 1px solid black;
-    border-radius: 10px;
-    width: 70%;
+    border-radius: 5px;
     height: 40px;
     min-width: 330px;
+    max-width: 500px;
     margin-bottom: 5px;
+    padding-top: 5px;
     & div {
       margin: 0 auto;
       &.month{
@@ -41,6 +45,21 @@ const getThisCra = async () => {
       }
       &.status{
         flex: 1;
+        & button {
+          height: 34px;
+          vertical-align: top;
+          border-radius: 3px;
+          border: 1px solid transparent;
+          transition: all .3s ease;
+          background: #fff;
+          border-color: #000;
+          color: #000;
+          cursor: pointer;
+          &:hover {
+            background: $main-color;
+            color: white;
+          }
+        }
       }
     }
   }

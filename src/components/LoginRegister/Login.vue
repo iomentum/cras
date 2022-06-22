@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
-import { signIn } from '@/expressutils/auth';
-import { getCra, isCraExist } from '@/expressutils/cras';
+import { signIn } from '@/services/auth';
+import { getCra } from '@/services/cras';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -16,15 +16,18 @@ const errorMsg = computed(() => {
 
 const logIn = async () => {
   const date = new Date();
-  const month = `${date.getMonth()+1}`;
+  const month = `${date.getMonth()+1}`.padStart(2, '0');
   const year = date.getFullYear();
-  const yearmonth = `${year}-${month.length == 1 ? `0${month}` : month}`
+  const yearmonth = `${year}-${month}`
 
   await signIn(email.value, password.value);
 
   if(userStore.user.isLogged)router.push('/')
-  if (await isCraExist(yearmonth)) {
-    await getCra(yearmonth)
+
+  try {
+    getCra(yearmonth);
+  } catch (error) {
+
   }
 };
 

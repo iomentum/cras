@@ -1,15 +1,16 @@
 import { useUserStore } from "@/stores/userStore";
+import env from "./env";
 
 export const changeUserInfos = async (firstName:string, lastName:string, customer:string) => {
   const store = useUserStore();
-  const userEmail = store.user.email
-  await fetch('http://localhost:3002/updateprofile',{
-    method: "POST",
+  const userid = store.user.uid;
+
+  await fetch(`${env.BACKEND_URL}/user/${userid}`,{
+    method: "PUT",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      email: userEmail,
       lastName: lastName,
       firstName: firstName,
       customer: customer
@@ -26,21 +27,21 @@ export const changeUserInfos = async (firstName:string, lastName:string, custome
 }
 
 export const setSignature = async (signatureURL: string) => {
-  const store = useUserStore();
+  const userStore = useUserStore();
+  const userid = userStore.user.uid;
 
-  await fetch('http://localhost:3002/uploadsignature',{
-    method: "POST",
+  await fetch(`${env.BACKEND_URL}/user/${userid}/signature`,{
+    method: "PUT",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
       signatureURL: signatureURL,
-      email: store.user.email
     }),
   })
   .then(response => response.json())
   .then(json => {
-    store.setSignatureURL(json.signatureURL)
+    userStore.setSignatureURL(json.signatureURL)
   })
 }
 

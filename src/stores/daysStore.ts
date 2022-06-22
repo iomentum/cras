@@ -1,23 +1,8 @@
 import { defineStore } from 'pinia';
-import { Day, WorkedDay, Holiday } from '@/models/day';
+import { Day, WorkedDay } from '@/models/day';
 import { generateDays } from '@/utils/generateDays';
 import { useUserStore } from './userStore';
-import firebase from 'firebase/compat/app';
-import { getFirestore, getDoc, doc } from 'firebase/firestore';
-import { getCra, isCraExist } from '@/expressutils/cras';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCYbjqSs55f4e8xqt9leTeGZzBR3AuD68k",
-  authDomain: "cra-auth-c57c2.firebaseapp.com",
-  projectId: "cra-auth-c57c2",
-  storageBucket: "cra-auth-c57c2.appspot.com",
-  messagingSenderId: "75056807790",
-  appId: "1:75056807790:web:2b64a9a613172294200b7f"
-};
-
-const app = firebase.initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+import { getCra } from '@/services/cras';
 
 export const useDaysStore = defineStore("days", {
   state: () :{
@@ -41,12 +26,16 @@ export const useDaysStore = defineStore("days", {
       this.dateOfSignature = '';
 
       if (date) {
-      const month = `${date.getMonth()+1}`;
-      const year = date.getFullYear();
-      const yearmonth = `${year}-${month.length == 1 ? `0${month}` : month}`
+        const month = `${date.getMonth()+1}`.padStart(2, '0');
+        const year = date.getFullYear();
+        const yearmonth = `${year}-${month}`;
+        const userStore = useUserStore();
 
-      await isCraExist(yearmonth) ? getCra(yearmonth) : this.arrayOfDays = await generateDays(date);
-
+        if (userStore.user.isLogged) {
+          await getCra(yearmonth)
+        } else {
+          this.arrayOfDays = await generateDays(date);
+        }
       } else {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
@@ -115,10 +104,10 @@ export const useDaysStore = defineStore("days", {
     getDateString: (state) => {
       if (!state.arrayOfDays[0]) return null
 
-      const month = `${state.arrayOfDays[0].date.getMonth()+1}`;
+      const month = `${state.arrayOfDays[0].date.getMonth()+1}`.padStart(2, '0');
       const year = state.arrayOfDays[0].date.getFullYear();
 
-      const date = `${year}-${month.length == 1 ? `0${month}` : month}`
+      const date = `${year}-${month}`
       return date
     },
     getSignatureDate: (state) => {

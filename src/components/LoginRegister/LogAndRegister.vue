@@ -3,9 +3,9 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore';
 import Login from '@/components/LoginRegister/Login.vue';
 import Register from '@/components//LoginRegister/Register.vue';
+import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
 
 const store = useUserStore();
-// const props = defineProps<{ userLoggedIn: Boolean }>();
 const login = ref(false);
 
 const signOut = () => {
@@ -32,6 +32,7 @@ const signOut = () => {
   <h1>Déconnexion</h1>
   <button @click="signOut()"> Déconnexion </button>
 </div>
+<TheFooter />
 </template>
 
 <style scoped lang="scss">
@@ -83,7 +84,6 @@ const signOut = () => {
     flex-direction: column;
     align-items: center;
     background: #5c2088;
-    box-shadow: 5px 20px 50px #000;
     & .input-container {
       text-align: center;
       background-color: #5c2088;
@@ -91,7 +91,6 @@ const signOut = () => {
     & a {
       color: white;
     }
-
   }
 }
 </style>

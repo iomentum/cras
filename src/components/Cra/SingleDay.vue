@@ -7,7 +7,6 @@ import { computed } from '@vue/reactivity';
 const route = useRoute();
 const store = useDaysStore();
 
-// eslint-disable-next-line no-undef
 const props = defineProps<{ day: WorkedDay | Day | Holiday }>();
 
 const toggleHalfDay = (evt: Event) => {

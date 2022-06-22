@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import CraButton from '@/components/Cra/CraButton.vue';
-import { getCrasList } from "@/expressutils/cras";
+import { getCrasList } from "@/services/cras";
+import TheFooter from '@/components/HeaderFooter/TheFooter.vue';
 
 const cras = ref<any[]>([]);
 
@@ -18,6 +19,7 @@ getCras()
   <h1>Mes cras</h1>
   <CraButton v-for="cra in cras" :month="cra.yearmonth" :signed="cra.status" />
 </div>
+<TheFooter />
 </template>
 
 <style scoped lang="scss">

@@ -2,14 +2,17 @@
 import { useDaysStore } from '@/stores/daysStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
 const date = new Date();
 const store = useDaysStore();
 const userStore = useUserStore();
 const route = useRoute();
-const thisMonth = date.getMonth()+1;
-const yearmonth = ref(store.getDateString)
+const thisMonth = `${date.getMonth()+1}`.padStart(2, '0');
+
+const yearmonth = computed(() => {
+  return store.getDateString
+})
 
 const isLoggedIn = computed(() => {
   return userStore.user.isLogged
@@ -17,16 +20,7 @@ const isLoggedIn = computed(() => {
 
 const changeMonth = (event:Event) => {
   const target = event.target as HTMLInputElement;
-  yearmonth.value = target.value
   store.addDays(new Date(target.value));
-}
-
-const monthString = () => {
-  let thisMonthString = ""+thisMonth;
-  if (thisMonthString.length == 1) {
-    thisMonthString = "0"+thisMonthString;
-  }
-  return thisMonthString;
 }
 
 const isMainView = computed(() => {
@@ -79,8 +73,8 @@ const changeInputs = (e:Event) => {
         v-if="isMainView"
         type="month"
         :value="yearmonth"
-        :min="`${date.getFullYear()-10}-${monthString()}`"
-        :max="`${date.getFullYear()+3}-${monthString()}`"
+        :min="`${date.getFullYear()-10}-${thisMonth}`"
+        :max="`${date.getFullYear()+3}-${thisMonth}`"
         @change="changeMonth"
       >
       <p v-else>

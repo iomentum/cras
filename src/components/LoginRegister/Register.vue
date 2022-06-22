@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
-import { signUp } from '@/expressutils/auth';
+import { signUp } from '@/services/auth';
 
 const router = useRouter();
 const email = ref('');

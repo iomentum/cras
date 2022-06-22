@@ -3,7 +3,18 @@ import { useUserStore } from '@/stores/userStore';
 import firebase from 'firebase/compat/app';
 import { computed, ref } from 'vue';
 import 'firebase/compat/storage';
-import { changeUserInfos, setSignature } from '@/expressutils/user'
+import { changeUserInfos, setSignature } from '@/services/user'
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCYbjqSs55f4e8xqt9leTeGZzBR3AuD68k",
+  authDomain: "cra-auth-c57c2.firebaseapp.com",
+  projectId: "cra-auth-c57c2",
+  storageBucket: "cra-auth-c57c2.appspot.com",
+  messagingSenderId: "75056807790",
+  appId: "1:75056807790:web:2b64a9a613172294200b7f"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const store = useUserStore();
 const firstName = ref(store.user.firstName)

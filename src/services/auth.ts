@@ -1,12 +1,11 @@
 import { useUserStore } from "@/stores/userStore";
-import { storeToRefs } from "pinia";
-
+import env from "./env";
 
 export const signIn = async (email:string, password:string) => {
   const store = useUserStore();
   store.resetErrorMsg()
 
-  await fetch('http://localhost:3002/login',{
+  await fetch(`${env.BACKEND_URL}/login`,{
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -37,7 +36,7 @@ export const signIn = async (email:string, password:string) => {
 export const signUp = async (email: string, password:string, firstName:string, lastName:string, customer:string) => {
   const store = useUserStore();
   store.resetErrorMsg();
-  await fetch('http://localhost:3002/signup',{
+  await fetch(`${env.BACKEND_URL}/signup`,{
     method: "POST",
     headers: {
       "Content-Type": "application/json"
