@@ -20,56 +20,59 @@ export const useDaysStore = defineStore("days", {
   },
   actions: {
     async addDays (date?:Date) {
-      this.arrayOfDays= [];
+      this.arrayOfDays = [];
       this.loading = true;
       this.signed = false;
       this.dateOfSignature = '';
 
-      if (date) {
-        const month = `${date.getMonth()+1}`.padStart(2, '0');
-        const year = date.getFullYear();
-        const yearmonth = `${year}-${month}`;
-        const userStore = useUserStore();
-
-        if (userStore.user.isLogged) {
-          await getCra(yearmonth)
-        } else {
-          this.arrayOfDays = await generateDays(date);
-        }
-      } else {
+      if (!date) {
         const now = new Date();
         this.arrayOfDays = await generateDays(now);
+        this.loading = false;
+        return;
       }
+
+      const month = `${date.getMonth()+1}`.padStart(2, '0');
+      const year = date.getFullYear();
+      const yearmonth = `${year}-${month}`;
+      const userStore = useUserStore();
+
+      if (userStore.user.isLogged) {
+        await getCra(yearmonth);
+      } else {
+        this.arrayOfDays = await generateDays(date);
+      }
+
       this.loading = false;
     },
     toggleAllDays (isChecked: boolean) {
       if(isChecked) {
         this.arrayOfDays.forEach(day => {
-          if(day instanceof WorkedDay) { day.addWholeDay(); }
+          if (day instanceof WorkedDay) { day.addWholeDay(); }
         });
       } else {
         this.arrayOfDays.forEach(day => {
-          if(day instanceof WorkedDay) { day.reset(); }
+          if (day instanceof WorkedDay) { day.reset(); }
         });
       }
     },
     setArrayOfDays (array:Day[]) {
-      this.arrayOfDays = array
+      this.arrayOfDays = array;
     },
     toggleHalfDay (day:WorkedDay, checked:boolean, whichHalfDay:string) {
-      switch(whichHalfDay) {
+      switch (whichHalfDay) {
         case "morning":
-          if(checked) { day.addMorning(); }
-          else{ day.removeMorning(); }
+          if (checked) { day.addMorning(); }
+          else { day.removeMorning(); }
           break;
         case "afternoon":
-          if(checked) { day.addAfternoon(); }
-          else{ day.removeAfternoon(); }
+          if (checked) { day.addAfternoon(); }
+          else { day.removeAfternoon(); }
           break;
       }
     },
-    resetDaysStore() {
-      this.arrayOfDays = []
+    resetDaysStore () {
+      this.arrayOfDays = [];
     }
  },
 
@@ -99,19 +102,27 @@ export const useDaysStore = defineStore("days", {
       return workedDayCounter;
     },
     isAllDaysChecked: (state) => {
-      return state.arrayOfDays.every(day => {if(day instanceof WorkedDay)day.morning && day.afternoon});
+      return state.arrayOfDays.every(day => {
+        if (day instanceof WorkedDay) day.morning && day.afternoon;
+      });
     },
-    getDateString: (state) => {
-      if (!state.arrayOfDays[0]) return null
+    getDateString: (state) : Date | string => {
+      console.log(state.arrayOfDays);
+
+      if (!state.arrayOfDays[0]) {
+        console.log('returned new');
+
+        return new Date();
+      }
 
       const month = `${state.arrayOfDays[0].date.getMonth()+1}`.padStart(2, '0');
       const year = state.arrayOfDays[0].date.getFullYear();
 
-      const date = `${year}-${month}`
-      return date
+      const date = `${year}-${month}`;
+      return date;
     },
     getSignatureDate: (state) => {
-      return state.dateOfSignature
+      return state.dateOfSignature;
     }
   }
 });

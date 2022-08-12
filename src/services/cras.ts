@@ -1,8 +1,8 @@
-import { useUserStore } from "@/stores/userStore"
-import { useDaysStore } from "@/stores/daysStore"
+import { useUserStore } from "@/stores/userStore";
+import { useDaysStore } from "@/stores/daysStore";
 import { jsonToDays, daysToJson } from "@/utils/daysListConverter";
 import generateDays from "@/utils/generateDays";
-import { env } from "./env"
+import { env } from "./env";
 
 export const createOrUpdateCraDB = async () => {
 
@@ -20,12 +20,12 @@ export const createOrUpdateCraDB = async () => {
     },
     body: JSON.stringify({
       daysList: JSON.stringify(daysListToCreateOrUpdate),
-      signatureDate: "empty",
-    }),
+      signatureDate: "empty"
+    })
   })
   .then(response => response.json())
-  .then(json => console.log(JSON.parse(json.daysList)))
-}
+  .then(json => console.log(JSON.parse(json.daysList)));
+};
 export const getCrasList = async () => {
 
   const userStore = useUserStore();
@@ -36,7 +36,7 @@ export const getCrasList = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
-    },
+    }
   })
   .then(response => response.json())
   .then(json => {
@@ -44,12 +44,12 @@ export const getCrasList = async () => {
       cras.push({
         yearmonth: cra.yearmonth,
         status: cra.signed
-      })
-      })
-  })
+      });
+      });
+  });
 
-  return cras
-}
+  return cras;
+};
 
 export const getCra = async (yearmonth: string) => {
 
@@ -61,35 +61,35 @@ export const getCra = async (yearmonth: string) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
-      },
+      }
     })
     .then(response => response.json())
     .then(json => {
-      const days = JSON.parse(json.daysList)
+      const days = JSON.parse(json.daysList);
       daysStore.arrayOfDays = jsonToDays(days);
       daysStore.dateOfSignature = json.signatureDate;
       daysStore.signed = json.signed;
     });
   } catch (error) {
-    daysStore.arrayOfDays = await generateDays(new Date(yearmonth))
+    daysStore.arrayOfDays = await generateDays(new Date(yearmonth));
   }
-}
+};
 
-export const signCra = async() => {
+export const signCra = async () => {
   const daysStore = useDaysStore();
   const userStore = useUserStore();
   const yearmonth = daysStore.getDateString;
-  const userid = userStore.user.uid
+  const userid = userStore.user.uid;
 
   await fetch(`${env.BACKEND_URL}/user/${userid}/cra/${yearmonth}/sign`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
-    },
+    }
   })
   .then(response => response.json())
   .then(json => {
     daysStore.dateOfSignature = json.signatureDate,
-    daysStore.signed = json.signed
-  })
-}
+    daysStore.signed = json.signed;
+  });
+};

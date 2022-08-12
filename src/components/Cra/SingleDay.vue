@@ -2,14 +2,16 @@
 import { Day, WorkedDay, Holiday } from '@/models/day';
 import { useDaysStore } from '@/stores/daysStore';
 import { useRoute } from 'vue-router';
-import { computed } from '@vue/reactivity';
+import { computed, ref } from '@vue/reactivity';
 import { defineProps } from 'vue';
+import { NCheckbox } from 'naive-ui';
 
 const route = useRoute();
 const store = useDaysStore();
 
 const props = defineProps<{ day: WorkedDay | Day | Holiday }>();
 
+const morning = ref(props.day.morning || false);
 
 const toggleHalfDay = (evt: Event) => {
   let target = evt.target as HTMLInputElement;
@@ -34,11 +36,20 @@ const isMainView = computed(() => {
       v-if="(day instanceof WorkedDay)"
       class="checkboxes"
     >
-      <!-- <md-checkbox v-model="morning">
-        Boolean
-      </md-checkbox> -->
+      <n-checkbox
+        v-model:checked="day.morning"
+        name="morning"
+        size="small"
+        @change="toggleHalfDay"
+      />
+      <n-checkbox
+        v-model:checked="day.afternoon"
+        name="afternoon"
+        size="small"
+        @change="toggleHalfDay"
+      />
 
-      <input
+      <!-- <input
         type="checkbox"
         name="morning"
         :checked="day.morning"
@@ -49,7 +60,7 @@ const isMainView = computed(() => {
         name="afternoon"
         :checked="day.afternoon"
         @change="toggleHalfDay"
-      >
+      > -->
     </div>
     <div
       v-else
@@ -75,6 +86,10 @@ const isMainView = computed(() => {
 </template>
 
 <style scoped lang="scss">
+.table-of-days .days-container div {
+    display: flex;
+    justify-content: center;
+}
 .day {
   display: flex;
   flex-direction: column;
@@ -86,9 +101,6 @@ const isMainView = computed(() => {
     font-family: "bau-regular", Arial, Helvetica, sans-serif;
   }
 
-  & .total-worked-day {
-  }
-
   & .checkboxes {
     display: flex;
     flex-direction: column;
@@ -97,7 +109,7 @@ const isMainView = computed(() => {
     justify-content: space-around;
   }
 
-  & div:nth-child(1) {
+  & > div:nth-child(1) {
     padding: 5px 4px;
     min-width: 20px;
     font-size: 1rem;

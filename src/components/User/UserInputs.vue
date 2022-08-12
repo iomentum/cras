@@ -2,7 +2,8 @@
 import { useDaysStore } from '@/stores/daysStore';
 import { useUserStore } from '@/stores/userStore';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { NInput, NSpace } from 'naive-ui';
 
 const date = new Date();
 const store = useDaysStore();
@@ -10,13 +11,11 @@ const userStore = useUserStore();
 const route = useRoute();
 const thisMonth = `${date.getMonth()+1}`.padStart(2, '0');
 
-const yearmonth = computed(() => {
-  return store.getDateString;
-});
+const nameInput = ref(userStore.user.firstName);
+const customerInput = ref(userStore.user.customer);
 
-const isLoggedIn = computed(() => {
-  return userStore.user.isLogged;
-});
+const yearmonth = computed(() => store.getDateString);
+const isLoggedIn = computed(() => userStore.user.isLogged);
 
 const changeMonth = (event:Event) => {
   const target = event.target as HTMLInputElement;
@@ -27,14 +26,9 @@ const isMainView = computed(() => {
   return route.path == "/";
 });
 
-const changeInputs = (e:Event) => {
-  const target = e.target as HTMLInputElement;
-  if (target.name == 'username') {
-    userStore.setFirstName(target.value);
-  }
-  if (target.name == 'customer') {
-    userStore.setCustomer(target.value);
-  }
+const changeInputs = () => {
+  userStore.setFirstName(nameInput.value);
+  userStore.setCustomer(customerInput.value);
 };
 
 </script>
@@ -43,26 +37,36 @@ const changeInputs = (e:Event) => {
   <div class="inputs">
     <div>
       <p>NOM DE L'INTERVENANT</p>
-      <input
+      <n-space
         v-if="isMainView && !isLoggedIn"
-        type="text"
-        name="username"
-        :value="userStore.user.firstName"
-        @change="changeInputs"
+        vertical
       >
+        <n-input
+          v-model:value="nameInput"
+          type="text"
+          name="username"
+          placeholder="Name"
+          @change="changeInputs"
+        />
+      </n-space>
       <p v-else>
         {{ userStore.getUserFullName }}
       </p>
     </div>
     <div>
       <p>NOM DU CLIENT</p>
-      <input
+      <n-space
         v-if="isMainView && !isLoggedIn"
-        type="text"
-        name="customer"
-        :value="userStore.user.customer"
-        @change="changeInputs"
+        vertical
       >
+        <n-input
+          v-model:value="customerInput"
+          type="text"
+          name="customer"
+          placeholder="Name"
+          @change="changeInputs"
+        />
+      </n-space>
       <p v-else>
         {{ userStore.user.customer }}
       </p>
@@ -86,16 +90,17 @@ const changeInputs = (e:Event) => {
 
 <style scoped lang="scss">
 .inputs {
+  width: 70%;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  justify-content: space-around;
+  margin: 0 auto;
+  margin-bottom: 20px;
 
-  & div {
+  & > div {
+    padding: 10px;
     background-color: #fbf5f3;
-    margin: 20px;
-    width: 300px;
-    min-width: 246px;
-    padding: 10px 20px 10px 20px;
     text-align: center;
     font-size: 14px;
     font-family: "Bau-Bold", Arial, Helvetica, sans-serif;
