@@ -66,6 +66,7 @@ const isMainView = computed(() => {
   font-size: 1rem;
   z-index: 3;
   display: flex;
+  justify-content: center;
   text-align: center;
   margin: 0 auto;
   width: 90%;
